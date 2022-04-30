@@ -1,8 +1,12 @@
 ---
 title: "Bayesian Learning Artificial Neural Networks for Modeling Survival Data"
 #author: 
-#date: "  29 April, 2022 "
+#date: "  `r format(Sys.time(), '%d %B, %Y')` "
 output:
+  tufte::tufte_html:
+    #highlight: pygments
+    toc_depth: 5
+    number_sections: true
   html_document:
     mathjax: "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_CHTML.js"
     self_contained: false  
@@ -10,17 +14,49 @@ output:
     toc_depth: 5
     number_sections: true
     keep_md: yes
-  tufte::tufte_html:
-    #highlight: pygments
-    toc_depth: 5
-    number_sections: true
   #tufte::tufte_handout:
 bibliography: references.bib
 citation_package: natbib
 link-citations: yes
 ---
 
+```{r setup, include=FALSE}
+options(java.parameters = "-Xmx15g")
 
+knitr::opts_chunk$set(warning=FALSE,
+                      message=FALSE,
+                      echo=F,
+                      dpi=300,
+                      error=FALSE)
+ 
+# Evaluate the figure caption after the plot
+#knitr::opts_knit$set(eval.after='fig.cap')
+ 
+# Use the table counter that the htmlTable() provides
+options(table_counter = TRUE)
+ 
+# Use the figCapNo() with roman letters
+#options(fig_caption_no_roman = TRUE)
+#options(kableExtra.latex.load_packages = F)
+
+# Then install the Grmd-package by running below code:
+#devtools::install_github("gforge/Grmd")
+
+
+# function to install missing packages
+ipak <- function(pkg){
+  new.pkg <- pkg[!(pkg %in% installed.packages()[, "Package"])]
+  if (length(new.pkg))
+    install.packages(new.pkg, dependencies = TRUE, repos='http://cran.rstudio.com/')
+  sapply(pkg, require, character.only = TRUE)
+}
+
+#install.packages('package_name', dependencies=TRUE, repos='http://cran.rstudio.com/')
+
+packages =c( "tidyverse","knitr", "kableExtra","skimr", "MatchIt", "RItools","optmatch", "ggplot2", "tufte", "tufterhandout")
+
+ipak(packages)
+```
 <style type="text/css">
 /* Three image containers (use 25% for four, and 50% for two, etc) */
 .column {
@@ -45,7 +81,7 @@ link-citations: yes
 
 Amos Okutse, Naomi Lee
 
- 29 April, 2022 
+ `r format(Sys.time(), '%d %B, %Y')` 
 
 </h1>
 <span>
@@ -60,9 +96,8 @@ Amos Okutse, Naomi Lee
 
 Accurate predictions of prognostic outcomes are of substantial and pivotal significance in the context of quality care delivery. However, the application of deep learning models to enhance caregiving in healthcare has been limited by concerns related to the reliability of such methods. In this way, models that are robust and which can result in a throughput prediction of such clinical outcomes as survival while at the same time exhibiting high reliability and potential to be generalized to larger populations remain in high demand. As a result, there has been an emerging persistent interest in modeling survival data to leverage the promise deep learning models offer in this regard. This is not surprising given the significance of the healthcare sector, where we are often interested in understanding, for instance, the role that a specific differentially expressed gene plays concerning prognosis or, more generally, understanding how a given treatment regimen is likely to impact patient outcomes and in turn make decisions accordingly to perhaps improve patient outcomes related to care.
 
-
-```marginfigure
-<center><img src=""D:\\Brown University\\bayesian-networks\\artificial-intelligence.jpg""></center>
+```{marginfigure, echo=TRUE}
+<center><img src="D:\\Brown University\\bayesian-networks\\artificial-intelligence.jpg"></center>
 ```
 
 Analyzing time-to-event data involves is an inimitable problem given that the outcome of interest might comprise whether or not an event has occurred (binary outcome) but also the time when this event occurs (continuous outcome) [@feng2021bdnnsurv]. The problem is further complicated by missing data on the survival outcome of interest—censored data.^[Censoring refers to a concept in survival analysis where the actual time to event is unknown due to such reasons as the loss to follow up, withdrawals, or an exact unknown time of event. In right censoring, the event of interest occurs after the end of the experiment or study, whereas in left censoring, the event occurs before the onset of the study. Interval censoring is when the actual survival time is bounded between some interval]. The very nature of (censored) survival data makes it impossible to apply classical analysis methods such as logistic regression.
@@ -80,9 +115,12 @@ With all the hype linked to this deep learning method in the recent past [@hasti
 > "Computer systems with interconnected nodes designed like neurons to mimic the human brain in terms of intelligence. These networks use algorithms to discover hidden data structures and patterns, correlations, clusters, and classify them, learn and improve over time."
 The idea is to take in simple functions as inputs and then allow these functions to build upon each other. The models are flexible enough to learn non-linear relationships rather than prescribing them as is in kernels or transformations. A neural network takes in an input vector of p features $X=(X_1, X_2, \cdots , X_p)$ and then creates a non-linear function to forecast an outcome variable, $Y$. While varied statistical models such as Bayesian additive regression trees (BART) and random forests exist, neural networks have a structure that contrasts them from these other methods. Figure 1 shows a feed-forward neural network with an input layer consisting of 4 input features, $X=(X_1, \cdots, X_4)$, a single hidden layer with 5 nodes $A_1, \cdots, A_5$, a non-linear activation function, $f(X)$ (output layer), and the desired outcome, $Y.$
 
+```{r}
+#the image of the neural network
+url<-"D:\\Brown University\\bayesian-networks\\basic_neural_1.jpg"
+```
 
-
-![](D:\Brown University\bayesian-networks\basic_neural_1.jpg)
+![](`r url`)
 
 The arrows show that the input layer is feeding into each of the nodes in the hidden layer which in turn feed into our activation function all the way to the outcome in a forward manner hence the name—"feed forward”. A general neural network model has the form:
 
@@ -130,13 +168,72 @@ S(t_k)=\prod_{l=1}^k (1-h(t_l))
 
 where $k$ denotes the disjoint intervals and $l$ the number of time periods in which the event occurred.
 
+```{r}
+#the image of the neural network
+url<-"D:\\Brown University\\bayesian-networks\\cox_net.png"
+```
 
-
-![](D:\Brown University\bayesian-networks\cox_net.png)
+![](`r url`)
 
 # Bayesian approach to inference using ANN
 
-This post focuses on inference using a two-layer feed-forward artificial neural network. Specifically, we describe the Bayesian learning neural networks implemented by @sharaf2020blnn on a neural network-based implementation of the Cox proportional hazard model described above.
+This post focuses on inference using a two-layer feed-forward artificial neural network. Specifically, we describe the Bayesian learning neural networks implemented by @sharaf2020blnn on a neural network-based implementation of the Cox proportional hazard model described above. In training neural networks using conventional methodologies, the aim is to find a local minimum of the error function, an ideology that makes model selection rather difficult. Additionally, as described elsewhere by [@hastie2009elements], the training of neural networks presents such an issue as overfitting, a situation where, even though the model performs extremely well on the training data, it fails to generalize well on resampling or when applied on unobserved data. Overfitting has been linked to these models having too many weights such that they overfit at the global minimum of $R$ [@lawrence1997lessons; @hastie2009elements]. According to @burden2008bayesian :
+
+>"Bayesian regularized artificial neural networks (BRANNs) are more robust than standard backpropagation nets and can reduce or eliminate the need for lengthy cross-validation."
+
+In the Bayesian context, the idea is to use prior information about the distribution of the parameter of interest, update this information using the sample data and obtain a posterior distribution for the parameter, $\theta$. BLNN tries to present Hamiltonian energy, $H(w, p)= U(w)+K(p)$ as a joint probability distribution of the neural network's weights, $w$ and momentum, $\textbf{p}$. Given independence between $w$ and $\textbf{p}$, this joint probability is defined as:
+
+\[
+P(w, p) = (\frac{1}{z} exp^{-U(w)/z})(\frac{1}{T}exp^{-K(p)/T})
+\]
+where: 
+$U(w) =$ the negative log-likelihood of the posterior distribution defined as $U(w)=-log[p(w)L(w|D)]$ 
+$L(w|D) =$ the likelihood function given the data <br>
+$K(p) = \sum_{i=1}^{d}(P_i^2)/(2m_i) $  is the kinetic energy corresponding to the negative log-likelihood of the normal distribution with mean, $\mu$ and variance-covariance matrix with diagonal elements, $M=(m_1, \cdots, m_d)$<br>
+$Z$ and $T$ are the normalizing constants.
+
+The algorithm is summarized as below:
+
+```{r}
+#the image of the neural network algorithm trained via Bayesian
+url<-"D:\\Brown University\\bayesian-networks\\blnn_algorithm.jpg"
+```
+
+![](`r url`)
+Source: Sharaf et. al (2020)
+
+Details about the implementation of this method can be found [here]( https://rdrr.io/github/BLNNdevs/BLNN/#vignettes).
+
+@sharaf2020blnn utilize a no-U-turn sampler (NUTS), an extension of Hamiltonian Monte-Carlo (HMC) that seeks to reduce the dependence on the number of step parameters used in HMC while retaining the efficiency in generating independent samples. The ANN is trained using both HMC and NUTS with dual averaging. The negative log-likelihood is replaced by network errors, and backpropagation is used to compute the gradients. Network errors and weights are assumed to be normally distributed with mean, $\mu$ but with a non-constant variance, $\sigma^2$. The variance of the prior is known by the precision parameter, $\tau = \frac{1}{\sigma^2}$ aka the hyperparameters which are either assigned to fixed, fine-tuned values or re-estimated based on historical data. The list of hyperparameters allowed in the BLNN implementation is discussed elsewhere [@sharaf2020blnn]. The following section provides a sample application of BLNNs applied to real-world data.
+
+# Bayesian-based neural networks for modeling survival using micro-array data
+
+
+## Introduction and data description
+
+
+
+
+## Exploratory data analysis and DEG identification
+
+
+
+
+# Sample results
+
+
+
+
+
+# Discussion
+
+
+
+
+
+# Python extension
+
+
 
 # References
 
