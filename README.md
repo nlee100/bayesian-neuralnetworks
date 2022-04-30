@@ -1,7 +1,7 @@
 ---
 title: "Bayesian Learning Artificial Neural Networks for Modeling Survival Data"
 #author: 
-#date: "  `r format(Sys.time(), '%d %B, %Y')` "
+#date: "  29 April, 2022 "
 output:
   tufte::tufte_html:
     #highlight: pygments
@@ -22,43 +22,7 @@ citation_package: natbib
 link-citations: yes
 ---
 
-```{r setup, include=FALSE}
-options(java.parameters = "-Xmx15g")
 
-knitr::opts_chunk$set(warning=FALSE,
-                      message=FALSE,
-                      echo=F,
-                      dpi=300,
-                      error=FALSE)
- 
-# Evaluate the figure caption after the plot
-#knitr::opts_knit$set(eval.after='fig.cap')
- 
-# Use the table counter that the htmlTable() provides
-options(table_counter = TRUE)
- 
-# Use the figCapNo() with roman letters
-#options(fig_caption_no_roman = TRUE)
-#options(kableExtra.latex.load_packages = F)
-
-# Then install the Grmd-package by running below code:
-#devtools::install_github("gforge/Grmd")
-
-
-# function to install missing packages
-ipak <- function(pkg){
-  new.pkg <- pkg[!(pkg %in% installed.packages()[, "Package"])]
-  if (length(new.pkg))
-    install.packages(new.pkg, dependencies = TRUE, repos='http://cran.rstudio.com/')
-  sapply(pkg, require, character.only = TRUE)
-}
-
-#install.packages('package_name', dependencies=TRUE, repos='http://cran.rstudio.com/')
-
-packages =c( "tidyverse","knitr", "kableExtra","skimr", "MatchIt", "RItools","optmatch", "ggplot2", "tufte", "tufterhandout")
-
-ipak(packages)
-```
 <style type="text/css">
 /* Three image containers (use 25% for four, and 50% for two, etc) */
 .column {
@@ -83,7 +47,7 @@ ipak(packages)
 
 Amos Okutse, Naomi Lee
 
- `r format(Sys.time(), '%d %B, %Y')` 
+ 29 April, 2022 
 
 </h1>
 <span>
@@ -98,9 +62,9 @@ Amos Okutse, Naomi Lee
 
 Accurate predictions of prognostic outcomes are of substantial and pivotal significance in the context of quality care delivery. However, the application of deep learning models to enhance caregiving in healthcare has been limited by concerns related to the reliability of such methods. In this way, models that are robust and which can result in a throughput prediction of such clinical outcomes as survival while at the same time exhibiting high reliability and potential to be generalized to larger populations remain in high demand. As a result, there has been an emerging persistent interest in modeling survival data to leverage the promise deep learning models offer in this regard. This is not surprising given the significance of the healthcare sector, where we are often interested in understanding, for instance, the role that a specific differentially expressed gene plays concerning prognosis or, more generally, understanding how a given treatment regimen is likely to impact patient outcomes and in turn make decisions accordingly to perhaps improve patient outcomes related to care.
 
-```{marginfigure, echo=TRUE}
-<center><img src="D:\\Brown University\\bayesian-networks\\artificial-intelligence.jpg"></center>
-```
+<label for="tufte-mn-" class="margin-toggle">&#8853;</label><input type="checkbox" id="tufte-mn-" class="margin-toggle"><span class="marginnote"><center>
+<img src="D:\\Brown University\\bayesian-networks\\artificial-intelligence.jpg">
+</center></span>
 
 Analyzing time-to-event data involves is an inimitable problem given that the outcome of interest might comprise whether or not an event has occurred (binary outcome) but also the time when this event occurs (continuous outcome) [@feng2021bdnnsurv]. The problem is further complicated by missing data on the survival outcome of interest—censored data.^[Censoring refers to a concept in survival analysis where the actual time to event is unknown due to such reasons as the loss to follow up, withdrawals, or an exact unknown time of event. In right censoring, the event of interest occurs after the end of the experiment or study, whereas in left censoring, the event occurs before the onset of the study. Interval censoring is when the actual survival time is bounded between some interval]. The very nature of (censored) survival data makes it impossible to apply classical analysis methods such as logistic regression.
 
@@ -118,12 +82,9 @@ With all the hype linked to this deep learning method in the recent past [@hasti
 
 The idea is to take in simple functions as inputs and then allow these functions to build upon each other. The models are flexible enough to learn non-linear relationships rather than prescribing them as is in kernels or transformations. A neural network takes in an input vector of p features $X=(X_1, X_2, \cdots , X_p)$ and then creates a non-linear function to forecast an outcome variable, $Y$. While varied statistical models such as Bayesian additive regression trees (BART) and random forests exist, neural networks have a structure that contrasts them from these other methods. Figure 1 shows a feed-forward neural network with an input layer consisting of 4 input features, $X=(X_1, \cdots, X_4)$, a single hidden layer with 5 nodes $A_1, \cdots, A_5$, a non-linear activation function, $f(X)$ (output layer), and the desired outcome, $Y.$
 
-```{r}
-#the image of the neural network
-url<-"D:\\Brown University\\bayesian-networks\\basic_neural_1.jpg"
-```
 
-![](`r url`)
+
+![](D:\Brown University\bayesian-networks\basic_neural_1.jpg)
 
 The arrows show that the input layer is feeding into each of the nodes in the hidden layer which in turn feed into our activation function all the way to the outcome in a forward manner hence the name—"feed forward”. A general neural network model has the form:
 
@@ -171,12 +132,9 @@ S(t_k)=\prod_{l=1}^k (1-h(t_l))
 
 where $k$ denotes the disjoint intervals and $l$ the number of time periods in which the event occurred.
 
-```{r}
-#the image of the neural network
-url<-"D:\\Brown University\\bayesian-networks\\cox_net.png"
-```
 
-![](`r url`)
+
+![](D:\Brown University\bayesian-networks\cox_net.png)
 
 # Bayesian approach to inference using ANN
 
@@ -197,12 +155,9 @@ $Z$ and $T$ are the normalizing constants.
 
 The algorithm is summarized as below:
 
-```{r}
-#the image of the neural network algorithm trained via Bayesian
-url<-"D:\\Brown University\\bayesian-networks\\blnn_algorithm.jpg"
-```
 
-![](`r url`)
+
+![](D:\Brown University\bayesian-networks\blnn_algorithm.jpg)
 Source: Sharaf et. al (2020)
 
 Details about the implementation of this method can be found [here]( https://rdrr.io/github/BLNNdevs/BLNN/#vignettes).
