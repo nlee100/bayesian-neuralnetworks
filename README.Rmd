@@ -7,6 +7,7 @@ output:
     #highlight: pygments
     toc_depth: 5
     number_sections: true
+  tufte::tufte_handout:
   html_document:
     mathjax: "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_CHTML.js"
     self_contained: false  
