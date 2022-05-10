@@ -9,6 +9,7 @@ output:
     toc_depth: 5
     number_sections: true
     keep_md: true
+    code_folding: hide
   tufte::tufte_handout:
   html_document:
     mathjax: "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_CHTML.js"
@@ -16,6 +17,7 @@ output:
     toc: true
     toc_depth: 5
     number_sections: true
+    #code_folding: hide
     #keep_md: yes
   #tufte::tufte_handout:
 bibliography: references.bib
@@ -120,7 +122,7 @@ With all the hype linked to this deep learning method in the recent past [@hasti
 
 The idea is to take in simple functions as inputs and then allow these functions to build upon each other. The models are flexible enough to learn non-linear relationships rather than prescribing them as is in kernels or transformations. A neural network takes in an input vector of p features $X=(X_1, X_2, \cdots , X_p)$ and then creates a non-linear function to forecast an outcome variable, $Y$. While varied statistical models such as Bayesian additive regression trees (BART) and random forests exist, neural networks have a structure that contrasts them from these other methods. Figure 1 shows a feed-forward neural network with an input layer consisting of 4 input features, $X=(X_1, \cdots, X_4)$, a single hidden layer with 5 nodes $A_1, \cdots, A_5$, a non-linear activation function, $f(X)$ (output layer), and the desired outcome, $Y.$
 
-```{r}
+```{r echo=FALSE}
 #the image of the neural network
 url<-"D:\\Brown University\\bayesian-networks\\basic_neural_1.jpg"
 ```
@@ -173,7 +175,7 @@ S(t_k)=\prod_{l=1}^k (1-h(t_l))
 
 where $k$ denotes the disjoint intervals and $l$ the number of time periods in which the event occurred.
 
-```{r}
+```{r echo=FALSE}
 #the image of the neural network
 url<-"D:\\Brown University\\bayesian-networks\\cox_net.png"
 ```
@@ -199,7 +201,7 @@ $Z$ and $T$ are the normalizing constants.
 
 The algorithm is summarized as below:
 
-```{r}
+```{r echo=FALSE}
 #the image of the neural network algorithm trained via Bayesian
 url<-"D:\\Brown University\\bayesian-networks\\blnn_algorithm.jpg"
 ```
@@ -216,7 +218,7 @@ Details about the implementation of this method can be found [here]( https://rdr
 
 ## Introduction and data description
 
-In our analyses in this section, we employ data consisting of 256 samples prepared using the Illumina Human-6 expression BeadChip Version 2.0 to identify DEGs and use bayesian neural networks to identify how these genes impact survival in patients with primary bladder cancer. The data relates to 165 primary bladder cancer samples and ten normal cells downloaded from the Gene Expression Omnibus (GEO) [@kim2010predictive, @okutse2021differential]. 
+In our analyses in this section, we employ data consisting of 256 samples prepared using the Illumina Human-6 expression BeadChip Version 2.0 to identify DEGs and use bayesian neural networks to identify how these genes impact survival in patients with primary bladder cancer. The data relates to 165 primary bladder cancer samples and nine normal cells downloaded from the Gene Expression Omnibus (GEO) [@kim2010predictive; @okutse2021differential]. 
 
 ```{r include=FALSE}
 #load the required libraries for the exploration and DEG
@@ -273,7 +275,7 @@ tT <- topTable(fit2, adjust="fdr", sort.by="B", number=Inf)
 
 ## Exploratory data analysis and DEG identification
 
-First, we perform some exploratory data analysis on these data. First, we perform data transformation including sample normalization and log2 transformation then use eBayes ^[link here] to fit a model for differential expression analysis. We then present a sample of 10 up and down regulated genes in Table \@ref(tab:table1).
+First, we perform some exploratory data analysis on these data. First, we perform data transformation including sample normalization and log2 transformation then use eBayes ^[link here] to fit a model for differential expression analysis. We then present a sample of 10 up and down regulated genes in Table \@ref(tab:table1). In Figure \@ref(fig:mean-difference) we visualize the differentially expressed genes in this sample using a mean-difference plot. 
 
 ```{r table1, include=TRUE}
 #top regulated genes
@@ -292,25 +294,175 @@ deg%>% kable(format = "html",
   kable_styling(full_width = FALSE, latex_options = c("HOLD_position", "stripped", "scale_down"), position = "left")
 ```
 
-In Figure 
 
-
-```{r volcano}
+```{r include=FALSE}
+# summarize test results as "up", "down" or "not expressed"
+dT <- decideTests(fit2, adjust.method="fdr", p.value=0.05)
 #volcano plots for all the DEGs
+# volcano plot (log P-value vs log fold change)
+colnames(fit2) # list contrast names
+ct <- 1        # choose contrast of interest
+```
+
+```{r mean-difference, fig.cap="A mean-difference plot showing the statistically significantly up and down regulated genes in primary bladder cancer relative to normal bladder cells.", fig.margin=TRUE, echo=FALSE, fig.pos="hold"}
+# MD plot (log fold change vs mean log expression)
+# highlight statistically significant (p-adj < 0.05) probes
+plotMD(fit2, column=ct, status=dT[,ct], legend=T, pch=20, cex=1, main = "")
+abline(h=0)
+```
+
+Additionally, we perform a basic enrichment analysis using Gene Ontology (GO) enrichment analysis and a small fraction of the DEGs (n = 300 genes) to identify the pathways where this statistically significantly differentially expressed genes are enriched. Here, we use network analysis to visualize the links between the DEGs and their biological functions. We notice in Figure \@ref(fig:enrich) that some of these genes are involved in a number of biological functions including synapse organization as well as junction assembly and neural migration.
+
+```{r include=FALSE}
+#Gene Enrichment analysis
+library(org.Hs.eg.db)  #to get the GENE IDs/annotation
+library(clusterProfiler)
+library(enrichplot)
+#load the saved gene sample (n=300) to convert gene symbols to ENTREZ IDs
+gene_symbols<-read.csv("gene.csv", header=FALSE)
+gene_symbols[]<-lapply(gene_symbols, as.character)
+#head(gene_symbols)
+gene_symbols<-gene_symbols[, 1]
+#doing the conversion of IDs to symbols
+converted_IDS <- mapIds(org.Hs.eg.db, gene_symbols, 'ENTREZID','SYMBOL')
+##remove any missing cases
+converted_IDS <- na.omit(converted_IDS)
+##GO enrichment analysis
+edo<-enrichGO(converted_IDS, org.Hs.eg.db, keyType = "ENTREZID", ont= "ALL", pvalueCutoff = 0.01)
+edo<-setReadable(edo, OrgDb = org.Hs.eg.db)
+```
+
+
+```{r enrich, fig.cap="Sample Enrichment analysis results using the Gene Ontology (GO) enrichment analysis.", fig.pos="hold", fig.margin = TRUE}
+#using clusteRprofiler to get the networks of genes in relation to function
+#cnetplot(edo, foldChange = gene_symbols, circular=TRUE, colorEdge = TRUE, showCategory = 20)
+#barplots of the similar results showing only 20 enrichment categories
+barplot(edo, showCategory=10, cex.names=3)
+```
+
+# Neural Networks with Bayesian Learning 
+
+The data used in this analysis consists of 43148 observations on 256 variables. First, we begin by cleaning up the data in preparation for downstream analysis. 
+
+```{r cache=TRUE, include=FALSE}
+# load series and platform data from GEO
+gset <- getGEO('GSE13507', GSEMatrix =TRUE, getGPL=FALSE)
+#get the expression profiles of the genes in the dataset
+x <- exprs(gset[[1]])
+```
+
+
+```{r include=FALSE}
+#extract the phenotype information from the dataset
+pData(gset[[1]])
+#get the names of the columns in the phenotype dataset
+colnames(pData(gset[[1]]))
+# transform the expression data to Z scores
+x <- t(scale(t(x)))
+#removing extra rows from the x data take only columns with associated survival information
+x<-x[, 69:233] 
+
+#extract information of interest from the phenotype data (pdata)
+idx <- which(colnames(pData(gset[[1]])) %in%
+               c('age:ch1', 'grade:ch1', 'survival month:ch1',
+                 'SEX:ch1','progression:ch1', 
+                 'invasiveness:ch1', 'overall survival:ch1'))
+metadata <- data.frame(pData(gset[[1]])[,idx],
+                       row.names = rownames(pData(gset[[1]])))
+#get metadata for only samples in the dataset used in analysis
+metadata<-metadata[69:233,] 
+# filter the Z-scores expression data to match the samples in our pdata
+x <- x[, which(colnames(x) %in% rownames(metadata))]
+# check that sample names match exactly between pdata and Z-scores 
+all((colnames(x) == rownames(metadata)) == TRUE)
+## [1] TRUE
+# create a merged pdata and Z-scores object
+coxdata <- data.frame(metadata, t(x))
+#load the downloaded separated dataset with the age associated with the samples
+age<-read.csv("age.csv",header=TRUE)
+coxdata$age.ch1<-age$age
+
+##convert variables to factors and numeric as necessary
+coxdata$age.ch1<-as.numeric(coxdata$age.ch1)
+coxdata$grade.ch1<-as.factor(coxdata$grade.ch1)
+coxdata$invasiveness.ch1<-as.factor(coxdata$invasiveness.ch1)
+coxdata$survival.month.ch1<-as.numeric(coxdata$survival.month.ch1)
+coxdata$SEX.ch1<-as.factor(coxdata$SEX.ch1)
+coxdata$progression.ch1<-as.factor(coxdata$progression.ch1)
+coxdata$overall.survival.ch1<-as.factor(coxdata$overall.survival.ch1)
+#coxdata$overall.survival.ch1<-as.factor(ifelse(coxdata$overall.survival.ch1=="death", 0, 1 ))
+
+# tidy column names
+colnames(coxdata)[1:7] <- c('Age', 'Grade', 'Invasiveness', 'Overall_survival',
+                            'Progression', 'Sex', 'Survival_time')
+# prepare phenotypes
+
+#levels(coxdata$Grade)<-c(1,2)
+#levels(coxdata$Progression)<-c(1,2)
+#levels(coxdata$Sex)<-c(1,2)
+str(coxdata)
+```
+
+
+
+
+
+```{r cache=TRUE, eval=FALSE}
+
+##### START HERE
+
+#install the package BLNN
+#install.packages("remotes")
+#remotes::install_github("BLNNdevs/BLNN")
+library(BLNN)
+#coxdata<-
+#mod<-model.matrix(Overall_Survival~.,
+#                  data = coxdata)
+#mod<-mod[, 2:ncol(mod)]
+trainx<-coxdata[, 8:ncol(coxdata)]
+trainy<-coxdata$Overall_survival
+#build the BLNN object
+survObj<-BLNN_Build(ncol(trainx), 1, 10,
+                    actF = "tanh", outF = "sigmoid", cost = "crossEntropy",
+                    hp.Err = 20, hp.W1 = rep(1, ncol(trainx)), hp.W2 = 1,
+                    hp.B1 = 1, hp.B2 = 1)
+```
+
+
+
+
+
+
+```{r cache=TRUE, eval=FALSE}
+#network weights
+n.par<-length(BLNN_GetWts(survObj))
+#number of desired chains
+chains<-2
+#initials weight values
+initials<-lapply(1:chains, function(i) rnorm(length(BLNN_GetWts(survObj)), 0, 1/sqrt(n.par)))
+
+#variance for the moments
+m1<-rep(1/2, n.par)
+#start the training
+survNUTS<-BLNN_Train(survObj, x=trainx, y=trainy,
+                     iter = 5000, thin = 10, warmup = 400,
+                     init = initials, chains = chains,
+                     algorithm = "NUTS", evidence = FALSE,
+                     control = list(adapt_delta=0.99, momentum_mass=m1, 
+                                    stepsize=1, gamma=15, to=10, useDA=TRUE,
+                                    max_treedepth=20))
 
 
 ```
 
 
+```{r eval=FALSE}
+#model predictions without evidence
+predicted1<-BLNN_Predict(survObj, trainx, fit = survNUTS)
+#predict using the neural network with evidence
+#predicted2<-BLNN_Predict(survObj, trainx, fit = survNUTS.ev)
 
-Basic functional enrichment analysis
-
-It might be of interest to understand the functional enrichment 
-
-# Sample results
-
-
-
+```
 
 
 # Discussion
