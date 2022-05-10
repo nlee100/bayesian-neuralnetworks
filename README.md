@@ -1,7 +1,7 @@
 ---
 title: "Bayesian Learning Artificial Neural Networks for Modeling Survival Data"
 #author: 
-#date: "  29 April, 2022 "
+#date: "  10 May, 2022 "
 output:
   tufte::tufte_html:
     #highlight: pygments
@@ -47,7 +47,7 @@ link-citations: yes
 
 Amos Okutse, Naomi Lee
 
- 29 April, 2022 
+ 10 May, 2022 
 
 </h1>
 <span>

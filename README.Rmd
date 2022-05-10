@@ -214,11 +214,80 @@ Details about the implementation of this method can be found [here]( https://rdr
 
 ## Introduction and data description
 
+In our analyses in this section, we employ data consisting of 256 samples prepared using the Illumina Human-6 expression BeadChip Version 2.0 to identify DEGs and use bayesian neural networks to identify how these genes impact survival in patients with primary bladder cancer. The data relates to 165 primary bladder cancer samples and ten normal cells downloaded from the Gene Expression Omnibus (GEO) [@kim2010predictive, @okutse2021differential]. First, we perform some exploratory data analysis on these data
 
 
+```{r include=FALSE}
+#load the required libraries for the exploration and DEG
+library(GEOquery)
+library(limma)
+library(clusterProfiler)
+library(Biobase)
+```
+
+
+```{r}
+#load the data from the GEO
+gset <- getGEO("GSE13507", GSEMatrix =TRUE, AnnotGPL=TRUE)
+if (length(gset) > 1) idx <- grep("GPL6102", attr(gset, "names")) else idx <- 1
+gset <- gset[[idx]]
+
+# make proper column names to match toptable 
+fvarLabels(gset) <- make.names(fvarLabels(gset))
+
+# group names for all samples
+gsms <- paste0("0000000000XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+               "XXXXXXXXXXXXXXXXXX22222222222222222222222222222222",
+               "22222222222222222222222222222222222222222222222222",
+               "22222222222222222222222222222222222222222222222222",
+               "222222222222222222222222222222222XXXXXXXXXXXXXXXXX",
+               "XXXXXX")
+sml <- c()
+for (i in 1:nchar(gsms)) { sml[i] <- substr(gsms,i,i) }
+
+# eliminate samples marked as "X"
+sel <- which(sml != "X")
+sml <- sml[sel]
+gset <- gset[ ,sel]
+
+# log2 transform
+exprs(gset) <- log2(exprs(gset))
+
+# set up the data and proceed with analysis
+sml <- paste("G", sml, sep="")    # set group names
+fl <- as.factor(sml)
+gset$description <- fl
+design <- model.matrix(~ description + 0, gset)
+colnames(design) <- levels(fl)
+fit <- lmFit(gset, design)
+cont.matrix <- makeContrasts(G2-G0, levels=design)
+fit2 <- contrasts.fit(fit, cont.matrix)
+fit2 <- eBayes(fit2, 0.01)
+
+tT <- topTable(fit2, adjust="fdr", sort.by="B", number=Inf) 
+tt<-subset(tT, select=c("Gene.symbol","logFC","AveExpr","t","P.Value","adj.P.Val","B"))
+dat<-subset(tT, select=c("Gene.symbol","logFC","adj.P.Val"))
+
+```
 
 ## Exploratory data analysis and DEG identification
 
+
+```{r}
+#top regulated genes
+upregulated<-tT[which(tT$logFC>0),][1:5,]
+#upregulated  ##use this to get gene details e.g GO function
+upregulated<-subset(upregulated, select=c("Gene.ID","", "logFC","AveExpr","t","P.Value","adj.P.Val","B"))
+#View(upregulated)
+
+#write.table(upregulated, file="Top 20 Upregulated Genes.txt",row.names=F, quote=FALSE, sep=",")
+
+##getting top 10 downregulated genes
+downreg<-tT[which(tT$logFC<0),][1:5,]
+downreg<-subset(downreg, select=c("Gene.ID","logFC","AveExpr","t","P.Value","adj.P.Val","B"))
+#View(downreg)
+
+```
 
 
 
