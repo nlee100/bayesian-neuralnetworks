@@ -1,7 +1,7 @@
 ---
 title: "Bayesian Learning Artificial Neural Networks for Modeling Survival Data"
 #author: 
-#date: "  29 April, 2022 "
+#date: "  10 May, 2022 "
 output:
   tufte::tufte_html:
     #highlight: pygments
@@ -47,7 +47,7 @@ link-citations: yes
 
 Amos Okutse, Naomi Lee
 
- 29 April, 2022 
+ 10 May, 2022 
 
 </h1>
 <span>
@@ -63,7 +63,7 @@ Amos Okutse, Naomi Lee
 Accurate predictions of prognostic outcomes are of substantial and pivotal significance in the context of quality care delivery. However, the application of deep learning models to enhance caregiving in healthcare has been limited by concerns related to the reliability of such methods. In this way, models that are robust and which can result in a throughput prediction of such clinical outcomes as survival while at the same time exhibiting high reliability and potential to be generalized to larger populations remain in high demand. As a result, there has been an emerging persistent interest in modeling survival data to leverage the promise deep learning models offer in this regard. This is not surprising given the significance of the healthcare sector, where we are often interested in understanding, for instance, the role that a specific differentially expressed gene plays concerning prognosis or, more generally, understanding how a given treatment regimen is likely to impact patient outcomes and in turn make decisions accordingly to perhaps improve patient outcomes related to care.
 
 <label for="tufte-mn-" class="margin-toggle">&#8853;</label><input type="checkbox" id="tufte-mn-" class="margin-toggle"><span class="marginnote"><center>
-<img src="D:\\Brown University\\bayesian-networks\\artificial-intelligence.jpg">
+<img src="artificial-intelligence.jpg">
 </center></span>
 
 Analyzing time-to-event data involves is an inimitable problem given that the outcome of interest might comprise whether or not an event has occurred (binary outcome) but also the time when this event occurs (continuous outcome) [@feng2021bdnnsurv]. The problem is further complicated by missing data on the survival outcome of interest—censored data.^[Censoring refers to a concept in survival analysis where the actual time to event is unknown due to such reasons as the loss to follow up, withdrawals, or an exact unknown time of event. In right censoring, the event of interest occurs after the end of the experiment or study, whereas in left censoring, the event occurs before the onset of the study. Interval censoring is when the actual survival time is bounded between some interval]. The very nature of (censored) survival data makes it impossible to apply classical analysis methods such as logistic regression.
@@ -84,7 +84,7 @@ The idea is to take in simple functions as inputs and then allow these functions
 
 
 
-![](D:\Brown University\bayesian-networks\basic_neural_1.jpg)
+![](basic_neural_1.jpg)
 
 The arrows show that the input layer is feeding into each of the nodes in the hidden layer which in turn feed into our activation function all the way to the outcome in a forward manner hence the name—"feed forward”. A general neural network model has the form:
 
@@ -134,7 +134,7 @@ where $k$ denotes the disjoint intervals and $l$ the number of time periods in w
 
 
 
-![](D:\Brown University\bayesian-networks\cox_net.png)
+![](cox_net.png)
 
 # Bayesian approach to inference using ANN
 
@@ -157,7 +157,7 @@ The algorithm is summarized as below:
 
 
 
-![](D:\Brown University\bayesian-networks\blnn_algorithm.jpg)
+![](blnn_algorithm.jpg)
 Source: Sharaf et. al (2020)
 
 Details about the implementation of this method can be found [here]( https://rdrr.io/github/BLNNdevs/BLNN/#vignettes).
