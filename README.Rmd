@@ -1,28 +1,28 @@
 ---
 title: "Bayesian Learning Artificial Neural Networks for Modeling Survival Data"
-#author: 
-#date: "  `r format(Sys.time(), '%d %B, %Y')` "
 output:
   bookdown::html_document2:
-    mathjax: "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_CHTML.js"
-    self_contained: false  
-    toc: true
+    mathjax: https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_CHTML.js
+    self_contained: no
+    toc: yes
     toc_depth: 5
-    number_sections: true
+    number_sections: yes
     code_folding: hide
-    #keep_md: yes
-  tufte::tufte_handout:
+  tufte::tufte_handout: null
   tufte::tufte_html:
-    #highlight: pygments
     toc_depth: 5
-    number_sections: true
-    keep_md: true
+    number_sections: yes
+    keep_md: yes
     code_folding: hide
   bookdown::tufte_html2:
     toc_depth: 5
-    number_sections: true
-    keep_md: true
+    number_sections: yes
+    keep_md: yes
     code_folding: hide
+  html_document:
+    toc: yes
+    toc_depth: '5'
+    df_print: paged
 bibliography: references.bib
 citation_package: natbib
 link-citations: yes
@@ -105,7 +105,7 @@ Amos Okutse, Naomi Lee
 Accurate predictions of prognostic outcomes are of substantial and pivotal significance in the context of quality care delivery. However, the application of deep learning models to enhance caregiving in healthcare has been limited by concerns related to the reliability of such methods. In this way, models that are robust and which can result in a throughput prediction of such clinical outcomes as survival while at the same time exhibiting high reliability and potential to be generalized to larger populations remain in high demand. As a result, there has been an emerging persistent interest in modeling survival data to leverage the promise deep learning models offer in this regard. This is not surprising given the significance of the healthcare sector, where we are often interested in understanding, for instance, the role that a specific differentially expressed gene plays concerning prognosis or, more generally, understanding how a given treatment regimen is likely to impact patient outcomes and in turn make decisions accordingly to perhaps improve patient outcomes related to care.
 
 ```{marginfigure, echo=TRUE, include=F}
-<center><img src="D:\\Brown University\\bayesian-networks\\artificial-intelligence.jpg""></center>
+<center><img src="artificial-intelligence.jpg""></center>
 ```
 
 
@@ -127,7 +127,7 @@ The idea is to take in simple functions as inputs and then allow these functions
 
 ```{r echo=FALSE}
 #the image of the neural network
-url<-"D:\\Brown University\\bayesian-networks\\basic_neural_1.jpg"
+url<-"basic_neural_1.jpg"
 ```
 
 ![](`r url`)
@@ -180,7 +180,7 @@ where $k$ denotes the disjoint intervals and $l$ the number of time periods in w
 
 ```{r echo=FALSE}
 #the image of the neural network
-url<-"D:\\Brown University\\bayesian-networks\\cox_net.png"
+url<-"cox_net.png"
 ```
 
 ![](`r url`)
@@ -206,7 +206,7 @@ The algorithm is summarized as below:
 
 ```{r echo=FALSE}
 #the image of the neural network algorithm trained via Bayesian
-url<-"D:\\Brown University\\bayesian-networks\\blnn_algorithm.jpg"
+url<-"blnn_algorithm.jpg"
 ```
 
 ![](`r url`)
