@@ -1,22 +1,28 @@
 ---
 title: "Bayesian Learning Artificial Neural Networks for Modeling Survival Data"
 #author: 
-#date: "  10 May, 2022 "
+#date: "  12 May, 2022 "
 output:
-  tufte::tufte_html:
-    #highlight: pygments
-    toc_depth: 5
-    number_sections: true
-    keep_md: true
-  tufte::tufte_handout:
-  html_document:
+  bookdown::html_document2:
     mathjax: "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_CHTML.js"
     self_contained: false  
     toc: true
     toc_depth: 5
     number_sections: true
-    #keep_md: yes
-  #tufte::tufte_handout:
+    code_folding: hide
+    keep_md: true
+  tufte::tufte_handout:
+  tufte::tufte_html:
+    #highlight: pygments
+    toc_depth: 5
+    number_sections: true
+    keep_md: true
+    code_folding: hide
+  bookdown::tufte_html2:
+    toc_depth: 5
+    number_sections: true
+    keep_md: true
+    code_folding: hide
 bibliography: references.bib
 citation_package: natbib
 link-citations: yes
@@ -47,7 +53,7 @@ link-citations: yes
 
 Amos Okutse, Naomi Lee
 
- 10 May, 2022 
+ 12 May, 2022 
 
 </h1>
 <span>
@@ -62,9 +68,8 @@ Amos Okutse, Naomi Lee
 
 Accurate predictions of prognostic outcomes are of substantial and pivotal significance in the context of quality care delivery. However, the application of deep learning models to enhance caregiving in healthcare has been limited by concerns related to the reliability of such methods. In this way, models that are robust and which can result in a throughput prediction of such clinical outcomes as survival while at the same time exhibiting high reliability and potential to be generalized to larger populations remain in high demand. As a result, there has been an emerging persistent interest in modeling survival data to leverage the promise deep learning models offer in this regard. This is not surprising given the significance of the healthcare sector, where we are often interested in understanding, for instance, the role that a specific differentially expressed gene plays concerning prognosis or, more generally, understanding how a given treatment regimen is likely to impact patient outcomes and in turn make decisions accordingly to perhaps improve patient outcomes related to care.
 
-<label for="tufte-mn-" class="margin-toggle">&#8853;</label><input type="checkbox" id="tufte-mn-" class="margin-toggle"><span class="marginnote"><center>
-<img src="D:\\Brown University\\bayesian-networks\\artificial-intelligence.jpg">
-</center></span>
+
+
 
 Analyzing time-to-event data involves is an inimitable problem given that the outcome of interest might comprise whether or not an event has occurred (binary outcome) but also the time when this event occurs (continuous outcome) [@feng2021bdnnsurv]. The problem is further complicated by missing data on the survival outcome of interest—censored data.^[Censoring refers to a concept in survival analysis where the actual time to event is unknown due to such reasons as the loss to follow up, withdrawals, or an exact unknown time of event. In right censoring, the event of interest occurs after the end of the experiment or study, whereas in left censoring, the event occurs before the onset of the study. Interval censoring is when the actual survival time is bounded between some interval]. The very nature of (censored) survival data makes it impossible to apply classical analysis methods such as logistic regression.
 
@@ -83,10 +88,6 @@ With all the hype linked to this deep learning method in the recent past [@hasti
 The idea is to take in simple functions as inputs and then allow these functions to build upon each other. The models are flexible enough to learn non-linear relationships rather than prescribing them as is in kernels or transformations. A neural network takes in an input vector of p features $X=(X_1, X_2, \cdots , X_p)$ and then creates a non-linear function to forecast an outcome variable, $Y$. While varied statistical models such as Bayesian additive regression trees (BART) and random forests exist, neural networks have a structure that contrasts them from these other methods. Figure 1 shows a feed-forward neural network with an input layer consisting of 4 input features, $X=(X_1, \cdots, X_4)$, a single hidden layer with 5 nodes $A_1, \cdots, A_5$, a non-linear activation function, $f(X)$ (output layer), and the desired outcome, $Y.$
 
 
-```r
-#the image of the neural network
-url<-"D:\\Brown University\\bayesian-networks\\basic_neural_1.jpg"
-```
 
 ![](D:\Brown University\bayesian-networks\basic_neural_1.jpg)
 
@@ -137,10 +138,6 @@ S(t_k)=\prod_{l=1}^k (1-h(t_l))
 where $k$ denotes the disjoint intervals and $l$ the number of time periods in which the event occurred.
 
 
-```r
-#the image of the neural network
-url<-"D:\\Brown University\\bayesian-networks\\cox_net.png"
-```
 
 ![](D:\Brown University\bayesian-networks\cox_net.png)
 
@@ -164,10 +161,6 @@ $Z$ and $T$ are the normalizing constants.
 The algorithm is summarized as below:
 
 
-```r
-#the image of the neural network algorithm trained via Bayesian
-url<-"D:\\Brown University\\bayesian-networks\\blnn_algorithm.jpg"
-```
 
 ![](D:\Brown University\bayesian-networks\blnn_algorithm.jpg)
 Source: Sharaf et. al (2020)
@@ -181,7 +174,7 @@ Details about the implementation of this method can be found [here]( https://rdr
 
 ## Introduction and data description
 
-In our analyses in this section, we employ data consisting of 256 samples prepared using the Illumina Human-6 expression BeadChip Version 2.0 to identify DEGs and use bayesian neural networks to identify how these genes impact survival in patients with primary bladder cancer. The data relates to 165 primary bladder cancer samples and ten normal cells downloaded from the Gene Expression Omnibus (GEO) [@kim2010predictive, @okutse2021differential]. 
+In our analyses in this section, we employ data consisting of 256 samples prepared using the Illumina Human-6 expression BeadChip Version 2.0 to identify DEGs and use bayesian neural networks to identify how these genes impact survival in patients with primary bladder cancer. The data relates to 165 primary bladder cancer samples and nine normal cells downloaded from the Gene Expression Omnibus (GEO) [@kim2010predictive; @okutse2021differential]. 
 
 
 
@@ -226,13 +219,13 @@ fit2 <- contrasts.fit(fit, cont.matrix)
 fit2 <- eBayes(fit2, 0.01)
 
 tT <- topTable(fit2, adjust="fdr", sort.by="B", number=Inf) 
-tt<-subset(tT, select=c("Gene.symbol","logFC","AveExpr","t","P.Value","adj.P.Val","B"))
-dat<-subset(tT, select=c("Gene.symbol","logFC","adj.P.Val"))
+#tt<-subset(tT, select=c("Gene.symbol","logFC","AveExpr","t","P.Value","adj.P.Val","B"))
+#dat<-subset(tT, select=c("Gene.symbol","logFC","adj.P.Val"))
 ```
 
 ## Exploratory data analysis and DEG identification
 
-First, we perform some exploratory data analysis on these data. First, we perform data transformation including sample normalization and log2 transformation then use eBayes ^[link here] to fit a model for differential expression analysis. We then present a sample of 10 up and down regulated genes in Table \@ref(tab:table1).
+First, we perform some exploratory data analysis on these data. We perform data transformation including sample normalization and log2 transformation then use eBayes ^[link here] to fit a model for differential expression analysis. We then present a sample of 10 up and down regulated genes in Table \@ref(tab:table1). In Figure \@ref(fig:mean-difference) we visualize the differentially expressed genes in this sample using a mean-difference plot. 
 
 
 ```r
@@ -246,11 +239,14 @@ downreg<-subset(downreg, select=c("Gene.ID","Gene.symbol","logFC","AveExpr","adj
 
 deg<-rbind(upregulated, downreg) 
 rownames(deg)<-NULL
-deg%>% kable(format = "html", caption = "Top 10 up and down regulated genes in primary bladder cancer. The first 10 rows represent upregulated genes", col.names = c("Gene ID", "Gene Symbol", "logFC", "Average Expression", "Adjusted P-value", "B")) %>% kable_styling(full_width = TRUE, latex_options = c("HOLD_position", "stripped"))
+deg%>% kable(format = "html", 
+             caption = "Top 10 up and down regulated genes in primary bladder cancer. The first 10 rows represent upregulated genes",
+             col.names = c("Gene ID", "Gene Symbol", "logFC", "Average Expression", "Adjusted P-value", "B")) %>%
+  kable_styling(full_width = FALSE, latex_options = c("HOLD_position", "stripped", "scale_down"), position = "left")
 ```
 
-<table class="table" style="margin-left: auto; margin-right: auto;">
-<caption>Top 10 up and down regulated genes in primary bladder cancer. The first 10 rows represent upregulated genes</caption>
+<table class="table" style="width: auto !important; ">
+<caption>(\#tab:table1)Top 10 up and down regulated genes in primary bladder cancer. The first 10 rows represent upregulated genes</caption>
  <thead>
   <tr>
    <th style="text-align:left;"> Gene ID </th>
@@ -425,24 +421,122 @@ deg%>% kable(format = "html", caption = "Top 10 up and down regulated genes in p
 </tbody>
 </table>
 
-In Figure 
+
+
+
+<div class="figure">
+<img src="README_files/figure-html/mean-difference-1.png" alt="A mean-difference plot showing the statistically significantly up and down regulated genes in primary bladder cancer relative to normal bladder cells."  />
+<p class="caption">(\#fig:mean-difference)A mean-difference plot showing the statistically significantly up and down regulated genes in primary bladder cancer relative to normal bladder cells.</p>
+</div>
+
+Additionally, we perform a basic functional enrichment analysis using Gene Ontology (GO) enrichment analysis and a small fraction of the DEGs (n = 300 genes) to identify the pathways where this statistically significantly differentially expressed genes are enriched. Here, we use a basic barplot to visualize the most common GO terms. We note in Figure \@ref(fig:enrich) that some of these genes are involved in a number of biological functions including synapse organization as well as junction assembly and neural migration.
+
+
 
 
 
 ```r
-#volcano plots for all the DEGs
+#using clusteRprofiler to get the networks of genes in relation to function
+#cnetplot(edo, foldChange = gene_symbols, circular=TRUE, colorEdge = TRUE, showCategory = 20)
+#barplots of the similar results showing only 20 enrichment categories
+barplot(edo, showCategory=10, cex.names=3)
+```
+
+<div class="figure">
+<img src="README_files/figure-html/enrich-1.png" alt="Sample Enrichment analysis results using the Gene Ontology (GO) enrichment analysis."  />
+<p class="caption">(\#fig:enrich)Sample Enrichment analysis results using the Gene Ontology (GO) enrichment analysis.</p>
+</div>
+
+# Neural Networks with Bayesian Learning 
+
+The data used in this analysis consists of 43148 observations on 256 variables. First, we begin by cleaning up the data in preparation for downstream analysis and then select a sample of genes for our analysis here. For brevity we perform analyses on a sample of n=2000 genes. 
+
+
+
+
+Here, we install package `remotes` and then use it to install the development version of the BLNN package which allows us to use Bayesian learning neural networks and apply these to our dataset. We install this package using the command `remotes::install_github("BLNNdevs/BLNN")` and then select a sample of about 1375 gene probes to use in downstream analysis. 
+
+
+```r
+#install the package BLNN
+#install.packages("remotes")
+#remotes::install_github("BLNNdevs/BLNN")
+library(BLNN)
+#load the probes to be used in analysis
+probes<-read.csv("probs.csv")
+coxdata<-coxdata[, 8:ncol(coxdata)]
+#filter the data to only selected probes from the probes data file
+names<-names(coxdata) %in% probes$x
+coxdata<-coxdata[, names]
+#add the survival data column to this subset data
+coxdata$overall_survival<-overall_survival
+#coxdata<-data.frame(overall_survival, coxdata)
+#str(coxdata)
+
+#create a matrix from the data
+mod<-model.matrix(overall_survival~.,
+                  data = coxdata)
+#create the training matrix of covariates and the response vector, y
+trainx<-mod[, 2:ncol(mod)]
+trainy<-coxdata$overall_survival
 ```
 
 
 
-Basic functional enrichment analysis
-
-It might be of interest to understand the functional enrichment 
-
-# Sample results
 
 
 
+
+
+
+
+```r
+#build the BLNN object
+survObj<-BLNN_Build(ncov = 1375, nout = 1, hlayer_size = 10,
+                    actF = "tanh", outF = "sigmoid", cost = "crossEntropy",
+                    hp.Err = 20, hp.W1 = rep(1, ncol(trainx)), hp.W2 = 1,
+                    hp.B1 = 1, hp.B2 = 1)
+#print(survObj)
+```
+
+
+
+
+
+
+
+```r
+trainxx<-coxdata[,1:1375]
+#network weights
+n.par<-length(BLNN_GetWts(survObj))
+#number of desired chains
+chains<-2
+#initials weight values
+initials<-lapply(1:chains, function(i) rnorm(length(BLNN_GetWts(survObj)), 0, 1/sqrt(n.par)))
+
+#variance for the moments
+m1<-rep(1/2, n.par)
+#trainx<-as.array(trainx)
+#start the training
+#trainxx<-array(trainx, dim = c(165, 1375, 0))
+
+survNUTS<-BLNN_Train(survObj, x=trainxx, y=trainy,
+                     iter = 5000, thin = 10, warmup = 400,
+                     init = initials, chains = chains,
+                     algorithm = "HMC", evidence = FALSE,
+                     control = list(adapt_delta=0.99, momentum_mass=m1, 
+                                    stepsize=1, gamma=15, to=10, useDA=TRUE,
+                                    max_treedepth=20))
+```
+
+
+
+```r
+#model predictions without evidence
+predicted1<-BLNN_Predict(survObj, trainx, fit = survNUTS)
+#predict using the neural network with evidence
+#predicted2<-BLNN_Predict(survObj, trainx, fit = survNUTS.ev)
+```
 
 
 # Discussion

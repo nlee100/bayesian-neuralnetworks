@@ -3,23 +3,26 @@ title: "Bayesian Learning Artificial Neural Networks for Modeling Survival Data"
 #author: 
 #date: "  `r format(Sys.time(), '%d %B, %Y')` "
 output:
-  bookdown::tufte_html2: default
+  bookdown::html_document2:
+    mathjax: "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_CHTML.js"
+    self_contained: false  
+    toc: true
+    toc_depth: 5
+    number_sections: true
+    code_folding: hide
+    #keep_md: yes
+  tufte::tufte_handout:
   tufte::tufte_html:
     #highlight: pygments
     toc_depth: 5
     number_sections: true
     keep_md: true
     code_folding: hide
-  tufte::tufte_handout:
-  html_document:
-    mathjax: "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_CHTML.js"
-    self_contained: false  
-    toc: true
+  bookdown::tufte_html2:
     toc_depth: 5
     number_sections: true
-    #code_folding: hide
-    #keep_md: yes
-  #tufte::tufte_handout:
+    keep_md: true
+    code_folding: hide
 bibliography: references.bib
 citation_package: natbib
 link-citations: yes
@@ -275,7 +278,7 @@ tT <- topTable(fit2, adjust="fdr", sort.by="B", number=Inf)
 
 ## Exploratory data analysis and DEG identification
 
-First, we perform some exploratory data analysis on these data. First, we perform data transformation including sample normalization and log2 transformation then use eBayes ^[link here] to fit a model for differential expression analysis. We then present a sample of 10 up and down regulated genes in Table \@ref(tab:table1). In Figure \@ref(fig:mean-difference) we visualize the differentially expressed genes in this sample using a mean-difference plot. 
+First, we perform some exploratory data analysis on these data. We perform data transformation including sample normalization and log2 transformation then use eBayes ^[link here] to fit a model for differential expression analysis. We then present a sample of 10 up and down regulated genes in Table \@ref(tab:table1). In Figure \@ref(fig:mean-difference) we visualize the differentially expressed genes in this sample using a mean-difference plot. 
 
 ```{r table1, include=TRUE}
 #top regulated genes
@@ -311,7 +314,7 @@ plotMD(fit2, column=ct, status=dT[,ct], legend=T, pch=20, cex=1, main = "")
 abline(h=0)
 ```
 
-Additionally, we perform a basic enrichment analysis using Gene Ontology (GO) enrichment analysis and a small fraction of the DEGs (n = 300 genes) to identify the pathways where this statistically significantly differentially expressed genes are enriched. Here, we use network analysis to visualize the links between the DEGs and their biological functions. We notice in Figure \@ref(fig:enrich) that some of these genes are involved in a number of biological functions including synapse organization as well as junction assembly and neural migration.
+Additionally, we perform a basic functional enrichment analysis using Gene Ontology (GO) enrichment analysis and a small fraction of the DEGs (n = 300 genes) to identify the pathways where this statistically significantly differentially expressed genes are enriched. Here, we use a basic barplot to visualize the most common GO terms. We note in Figure \@ref(fig:enrich) that some of these genes are involved in a number of biological functions including synapse organization as well as junction assembly and neural migration.
 
 ```{r include=FALSE}
 #Gene Enrichment analysis
@@ -342,21 +345,17 @@ barplot(edo, showCategory=10, cex.names=3)
 
 # Neural Networks with Bayesian Learning 
 
-The data used in this analysis consists of 43148 observations on 256 variables. First, we begin by cleaning up the data in preparation for downstream analysis. 
+The data used in this analysis consists of 43148 observations on 256 variables. First, we begin by cleaning up the data in preparation for downstream analysis and then select a sample of genes for our analysis here. For brevity we perform analyses on a sample of n=2000 genes. 
 
 ```{r cache=TRUE, include=FALSE}
 # load series and platform data from GEO
 gset <- getGEO('GSE13507', GSEMatrix =TRUE, getGPL=FALSE)
 #get the expression profiles of the genes in the dataset
 x <- exprs(gset[[1]])
-```
-
-
-```{r include=FALSE}
 #extract the phenotype information from the dataset
 pData(gset[[1]])
 #get the names of the columns in the phenotype dataset
-colnames(pData(gset[[1]]))
+#colnames(pData(gset[[1]]))
 # transform the expression data to Z scores
 x <- t(scale(t(x)))
 #removing extra rows from the x data take only columns with associated survival information
@@ -390,42 +389,58 @@ coxdata$survival.month.ch1<-as.numeric(coxdata$survival.month.ch1)
 coxdata$SEX.ch1<-as.factor(coxdata$SEX.ch1)
 coxdata$progression.ch1<-as.factor(coxdata$progression.ch1)
 coxdata$overall.survival.ch1<-as.factor(coxdata$overall.survival.ch1)
-#coxdata$overall.survival.ch1<-as.factor(ifelse(coxdata$overall.survival.ch1=="death", 0, 1 ))
 
 # tidy column names
 colnames(coxdata)[1:7] <- c('Age', 'Grade', 'Invasiveness', 'Overall_survival',
                             'Progression', 'Sex', 'Survival_time')
-# prepare phenotypes
 
-#levels(coxdata$Grade)<-c(1,2)
-#levels(coxdata$Progression)<-c(1,2)
-#levels(coxdata$Sex)<-c(1,2)
-str(coxdata)
+#create a vector of the response variable for analysis
+overall_survival<-coxdata$Overall_survival
 ```
 
 
+Here, we install package `remotes` and then use it to install the development version of the BLNN package which allows us to use Bayesian learning neural networks and apply these to our dataset. We install this package using the command `remotes::install_github("BLNNdevs/BLNN")` and then select a sample of about 1375 gene probes to use in downstream analysis. 
 
-
-
-```{r cache=TRUE, eval=FALSE}
-
-##### START HERE
+```{r cache=TRUE}
 
 #install the package BLNN
 #install.packages("remotes")
 #remotes::install_github("BLNNdevs/BLNN")
 library(BLNN)
-#coxdata<-
-#mod<-model.matrix(Overall_Survival~.,
-#                  data = coxdata)
-#mod<-mod[, 2:ncol(mod)]
-trainx<-coxdata[, 8:ncol(coxdata)]
-trainy<-coxdata$Overall_survival
+#load the probes to be used in analysis
+probes<-read.csv("probs.csv")
+coxdata<-coxdata[, 8:ncol(coxdata)]
+#filter the data to only selected probes from the probes data file
+names<-names(coxdata) %in% probes$x
+coxdata<-coxdata[, names]
+#add the survival data column to this subset data
+coxdata$overall_survival<-overall_survival
+#coxdata<-data.frame(overall_survival, coxdata)
+#str(coxdata)
+
+#create a matrix from the data
+mod<-model.matrix(overall_survival~.,
+                  data = coxdata)
+#create the training matrix of covariates and the response vector, y
+trainx<-mod[, 2:ncol(mod)]
+trainy<-coxdata$overall_survival
+```
+
+
+
+
+
+
+
+
+
+```{r}
 #build the BLNN object
-survObj<-BLNN_Build(ncol(trainx), 1, 10,
+survObj<-BLNN_Build(ncov = 1375, nout = 1, hlayer_size = 10,
                     actF = "tanh", outF = "sigmoid", cost = "crossEntropy",
                     hp.Err = 20, hp.W1 = rep(1, ncol(trainx)), hp.W2 = 1,
                     hp.B1 = 1, hp.B2 = 1)
+#print(survObj)
 ```
 
 
@@ -434,6 +449,8 @@ survObj<-BLNN_Build(ncol(trainx), 1, 10,
 
 
 ```{r cache=TRUE, eval=FALSE}
+
+trainxx<-coxdata[,1:1375]
 #network weights
 n.par<-length(BLNN_GetWts(survObj))
 #number of desired chains
@@ -443,16 +460,17 @@ initials<-lapply(1:chains, function(i) rnorm(length(BLNN_GetWts(survObj)), 0, 1/
 
 #variance for the moments
 m1<-rep(1/2, n.par)
+#trainx<-as.array(trainx)
 #start the training
-survNUTS<-BLNN_Train(survObj, x=trainx, y=trainy,
+#trainxx<-array(trainx, dim = c(165, 1375, 0))
+
+survNUTS<-BLNN_Train(survObj, x=trainxx, y=trainy,
                      iter = 5000, thin = 10, warmup = 400,
                      init = initials, chains = chains,
-                     algorithm = "NUTS", evidence = FALSE,
+                     algorithm = "HMC", evidence = FALSE,
                      control = list(adapt_delta=0.99, momentum_mass=m1, 
                                     stepsize=1, gamma=15, to=10, useDA=TRUE,
                                     max_treedepth=20))
-
-
 ```
 
 
