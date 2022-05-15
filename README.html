@@ -9,13 +9,14 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
+<meta name="author" content="Amos Okutse, Naomi Lee" />
 
 
 <title>Bayesian Learning Artificial Neural Networks for Modeling Survival Data</title>
 
 <script src="README_files/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="README_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<link href="README_files/bootstrap-3.3.5/css/readable.min.css" rel="stylesheet" />
 <script src="README_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="README_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="README_files/bootstrap-3.3.5/shim/respond.min.js"></script>
@@ -30,8 +31,6 @@
        pre:not([class]) { background-color: white }</style>
 <script src="README_files/navigation-1.1/tabsets.js"></script>
 <script src="README_files/navigation-1.1/codefolding.js"></script>
-<link href="README_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
-<script src="README_files/highlightjs-9.12.0/highlight.js"></script>
 <script src="README_files/kePrint-0.0.1/kePrint.js"></script>
 <link href="README_files/lightable-0.0.1/lightable.css" rel="stylesheet" />
 
@@ -44,18 +43,112 @@
   ul.task-list{list-style: none;}
     </style>
 
-<style type="text/css">code{white-space: pre;}</style>
-<script type="text/javascript">
-if (window.hljs) {
-  hljs.configure({languages: []});
-  hljs.initHighlightingOnLoad();
-  if (document.readyState && document.readyState === "complete") {
-    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
   }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
 }
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+.sourceCode .row {
+  width: 100%;
+}
+.sourceCode {
+  overflow-x: auto;
+}
+.code-folding-btn {
+  margin-right: -30px;
+}
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
 </script>
-
-
 
 
 
@@ -203,58 +296,31 @@ pre code {
 
 
 <h1 class="title toc-ignore">Bayesian Learning Artificial Neural Networks for Modeling Survival Data</h1>
+<h4 class="author">Amos Okutse, Naomi Lee</h4>
+<h4 class="date">14 May, 2022</h4>
 
 </div>
 
-<div id="TOC">
-<ul>
-<li><a href="#motivation"><span class="toc-section-number">1</span> Motivation</a></li>
-<li><a href="#but-what-are-neural-networks"><span class="toc-section-number">2</span> But what are neural networks?</a></li>
-<li><a href="#the-artificial-neural-network-approach-to-modeling-survival-data"><span class="toc-section-number">3</span> The Artificial Neural Network Approach to modeling survival data</a></li>
-<li><a href="#bayesian-approach-to-inference-using-ann"><span class="toc-section-number">4</span> Bayesian approach to inference using ANN</a></li>
-<li><a href="#bayesian-based-neural-networks-for-modeling-survival-using-micro-array-data"><span class="toc-section-number">5</span> Bayesian-based neural networks for modeling survival using micro-array data</a>
-<ul>
-<li><a href="#introduction-and-data-description"><span class="toc-section-number">5.1</span> Introduction and data description</a></li>
-<li><a href="#exploratory-data-analysis-and-deg-identification"><span class="toc-section-number">5.2</span> Exploratory data analysis and DEG identification</a></li>
-</ul></li>
-<li><a href="#neural-networks-with-bayesian-learning"><span class="toc-section-number">6</span> Neural Networks with Bayesian Learning</a></li>
-<li><a href="#discussion"><span class="toc-section-number">7</span> Discussion</a></li>
-<li><a href="#python-extension"><span class="toc-section-number">8</span> Python extension</a></li>
-<li><a href="#references"><span class="toc-section-number">9</span> References</a></li>
-</ul>
-</div>
 
-<style type="text/css">
-/* Three image containers (use 25% for four, and 50% for two, etc) */
-.column {
-  float: left;
-  width: 33.33%;
-  padding: 5px;
-}
-
-/* Clear floats after image containers */
-.row::after {
-  content: "";
-  clear: both;
-  display: table;
-}
-
-</style>
 <center>
-<h1>
-<p>Amos Okutse, Naomi Lee</p>
-<p>12 May, 2022</p>
-</h1>
-<p><span></p>
-<p></span></p>
+<strong>Reading Time: 17 minute(s)</strong>
 </center>
+<p><br></p>
+<figure>
+<center>
+<img src="intel.jpg" style="width:100%">
+<figcaption>
+Image Source:<a href="https://iveybusinessjournal.com/the-reality-of-artificial-intelligence/">Eric Lee</a>
+</figcaption>
+</center>
+</figure>
 <div id="motivation" class="section level1" number="1">
 <h1><span class="header-section-number">1</span> Motivation</h1>
-<p>Accurate predictions of prognostic outcomes are of substantial and pivotal significance in the context of quality care delivery. However, the application of deep learning models to enhance caregiving in healthcare has been limited by concerns related to the reliability of such methods. In this way, models that are robust and which can result in a throughput prediction of such clinical outcomes as survival while at the same time exhibiting high reliability and potential to be generalized to larger populations remain in high demand. As a result, there has been an emerging persistent interest in modeling survival data to leverage the promise deep learning models offer in this regard. This is not surprising given the significance of the healthcare sector, where we are often interested in understanding, for instance, the role that a specific differentially expressed gene plays concerning prognosis or, more generally, understanding how a given treatment regimen is likely to impact patient outcomes and in turn make decisions accordingly to perhaps improve patient outcomes related to care.</p>
-<p>Analyzing time-to-event data involves is an inimitable problem given that the outcome of interest might comprise whether or not an event has occurred (binary outcome) but also the time when this event occurs (continuous outcome) <span class="citation">(<a href="#ref-feng2021bdnnsurv" role="doc-biblioref">Feng and Zhao 2021</a>)</span>. The problem is further complicated by missing data on the survival outcome of interest—censored data.<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>. The very nature of (censored) survival data makes it impossible to apply classical analysis methods such as logistic regression.</p>
+<p>Accurate predictions of prognostic outcomes are of substantial and pivotal significance in the context of quality care delivery. However, the application of deep learning models to enhance caregiving in healthcare has been limited by concerns related to the reliability of such methods. In this way, models that are robust and which can result in a throughput prediction of such clinical outcomes as survival while at the same time exhibiting high reliability and potential to be generalized to larger populations remain in high demand. There has been an emerging persistent interest in modeling survival data to leverage the promise deep learning models offer in this regard. This is not surprising given the significance of the healthcare sector, where we are often interested in understanding, for instance, the role that a specific differentially expressed gene plays concerning prognosis or, more generally, understanding how a given treatment regimen is likely to impact patient outcomes and in turn make decisions accordingly to improve these patient outcomes related to care.</p>
+<p>Analyzing time-to-event data involves is an inimitable problem given that the outcome of interest might comprise whether or not an event has occurred (binary outcome) but also the time when this event occurs (continuous outcome) <span class="citation">(<a href="#ref-feng2021bdnnsurv" role="doc-biblioref">Feng and Zhao 2021</a>)</span>. The problem is further complicated by missing data on the survival outcome of interest—censored data<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>. The very nature of (censored) survival data makes it impossible to apply classical analysis methods such as logistic regression.</p>
 <p>Additionally, models based on the Weibull model have restrictive assumptions, including a parametric form of the distribution of the time to event. Similarly, the semi-parametric Cox proportional hazards (PH) model <span class="citation">(<a href="#ref-burden2008bayesian" role="doc-biblioref">Burden and Winkler 2008</a>)</span> also has assumptions, a major one being the proportional hazards assumption: “the effect of a unit increase in a covariate is multiplicative with respect to the hazard rate.” Despite the outcome of interest not always being a hazard rate, it can be a probability; for instance, the PH assumption does not make much sense, especially when we have a substantial number of covariates (we would need each of these covariates to satisfy this assumption). The performance of these methods has also been shown to be poor, especially when the underlying model is incorrectly specified <span class="citation">(<a href="#ref-feng2021bdnnsurv" role="doc-biblioref">Feng and Zhao 2021</a>)</span>.</p>
 <p>But how can we tackle the problem of modeling survival data amicably? This post reviews an extension of artificial neural networks (ANN) implemented based on the Cox PH model and trained to model survival data using Bayesian learning. In particular, we use a 2-layer feed-forward artificial neural network (ANN) trained using Bayesian inference to model survival outcomes and compare this model to the more traditional Cox proportional hazards model. Compared to previously studied models, we expect the ANN trained using Bayesian inference to perform better following its incorporation of Bayesian inference and neural networks.</p>
-<p>First, we introduce <em>neural networks in a more general context</em>, then discuss <em>the neural networks approach to modeling survival data</em> and how Bayesian inference has been introduced into these models to enhance their predictive capacity. Next, we introduce an application of the Bayesian learning artificial neural network (BLNN) using an R package of a similar name applied in modeling the effect of identified differentially expressed genes on the survival of patients with primary bladder cancer. Lastly, we compare this model to the more traditional Cox PH model for illustrative purposes and provide an extension code in Python.</p>
+<p>First, we introduce <em>neural networks in a more general context</em>, then discuss <em>the neural networks approach to modeling survival data</em> and <em>how Bayesian inference has been introduced into these models to enhance their predictive capacity</em>. Next, we introduce an application of the Bayesian learning artificial neural network (BLNN) using an R package of a similar name applied in modeling the effect of identified differentially expressed genes on the survival of patients with primary bladder cancer. Lastly, we compare this model to the more traditional neural network for illustrative purposes and provide an extension code in Python.</p>
 </div>
 <div id="but-what-are-neural-networks" class="section level1" number="2">
 <h1><span class="header-section-number">2</span> But what are neural networks?</h1>
@@ -263,7 +329,12 @@ pre code {
 <p>“Computer systems with interconnected nodes designed like neurons to mimic the human brain in terms of intelligence. These networks use algorithms to discover hidden data structures and patterns, correlations, clusters, and classify them, learn and improve over time.”</p>
 </blockquote>
 <p>The idea is to take in simple functions as inputs and then allow these functions to build upon each other. The models are flexible enough to learn non-linear relationships rather than prescribing them as is in kernels or transformations. A neural network takes in an input vector of p features <span class="math inline">\(X=(X_1, X_2, \cdots , X_p)\)</span> and then creates a non-linear function to forecast an outcome variable, <span class="math inline">\(Y\)</span>. While varied statistical models such as Bayesian additive regression trees (BART) and random forests exist, neural networks have a structure that contrasts them from these other methods. Figure 1 shows a feed-forward neural network with an input layer consisting of 4 input features, <span class="math inline">\(X=(X_1, \cdots, X_4)\)</span>, a single hidden layer with 5 nodes <span class="math inline">\(A_1, \cdots, A_5\)</span>, a non-linear activation function, <span class="math inline">\(f(X)\)</span> (output layer), and the desired outcome, <span class="math inline">\(Y.\)</span></p>
-<p><img src="basic_neural_1.jpg" /></p>
+<figure>
+<img src="basic_neural_1.jpg" style="width:50%">
+<figcaption>
+Image Source: Hastie et al. 2009
+</figcaption>
+</figure>
 <p>The arrows show that the input layer is feeding into each of the nodes in the hidden layer which in turn feed into our activation function all the way to the outcome in a forward manner hence the name—“feed forward.” A general neural network model has the form:</p>
 <p><span class="math display">\[\begin{align}
  f(X) &amp; = \beta_0 + \sum_{k=1}^{K} \beta_k h_k (X)\\
@@ -272,16 +343,15 @@ pre code {
 <p>In the first modeling step, the <span class="math inline">\(K\)</span> activations in the hidden layer are computed as functions of the features in the input layer, that is:</p>
 <p><span class="math display">\[\begin{align}
 A_k = h_k(X) &amp;= g(w_{k0} + \sum_{j=1}^{p}w_{kj}X_j)\\
-&amp; =~~\textrm {where} ~g(z) = \textrm{non-linear activation function which has to be specified.}
-\end{align}\]</span></p>
-<p>The <span class="math inline">\(K\)</span> activation functions from the hidden layer then feed their outputs into the output layer so that we have:</p>
+\end{align}\]</span>
+where <span class="math inline">\(g(z)\)</span> is the activation function specified. The <span class="math inline">\(K\)</span> activation functions from the hidden layer then feed their outputs into the output layer so that we have:</p>
 <p><span class="math display">\[\begin{align}
  f(X) &amp; = \beta_0 + \sum_{k=1}^{K} \beta_k A_k
 \end{align}\]</span></p>
-<p>where <span class="math inline">\(K\)</span> in Figure 1 is 5. Parameters <span class="math inline">\(\beta_0, \cdots, \beta_K\)</span>, as well as, <span class="math inline">\(w_{10}, \cdots, w_{Kp}\)</span> are estimated from the data. Quite a number of options exist for the activation function, <span class="math inline">\(g(z).\)</span><a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a> The non-linearity of the activation function <span class="math inline">\(g(z)\)</span> allows the model to capture complex non-linear structures as well as interaction effects.</p>
+<p>where <span class="math inline">\(K\)</span> in Figure 1 is 5. Parameters <span class="math inline">\(\beta_0, \cdots, \beta_K\)</span>, as well as, <span class="math inline">\(w_{10}, \cdots, w_{Kp}\)</span> are estimated from the data. Quite a number of options exist for the activation function, <span class="math inline">\(g(z)\)</span>.<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a> The non-linearity of the activation function <span class="math inline">\(g(z)\)</span> allows the model to capture complex non-linear structures as well as interaction effects.</p>
 </div>
-<div id="the-artificial-neural-network-approach-to-modeling-survival-data" class="section level1" number="3">
-<h1><span class="header-section-number">3</span> The Artificial Neural Network Approach to modeling survival data</h1>
+<div id="the-artificial-neural-network-ann-approach-to-modeling-survival-data" class="section level1" number="3">
+<h1><span class="header-section-number">3</span> The Artificial Neural Network (ANN) Approach to modeling survival data</h1>
 <p>The BLNN implementation of Bayesian inference in artificial neural networks is based on the Cox PH-based neural model described by <span class="citation"><a href="#ref-sharaf2015two" role="doc-biblioref">Sharaf and Tsokos</a> (<a href="#ref-sharaf2015two" role="doc-biblioref">2015</a>)</span>. In particular, the idea is to build a predictive model for survival using a neural network with <span class="math inline">\(K\)</span> outputs. <span class="math inline">\(K\)</span> here defines the number of periods. Using this neural network architecture, Mani et al. estimated a hazard function where for each individual, we have a training vector a $1 K $ of hazard probabilities <span class="math inline">\((h_{ik})\)</span> defined as:
 <span class="math display">\[ 
 h_{ik}=
@@ -300,7 +370,14 @@ where <span class="math inline">\(h_{ik}=0\)</span> if the event of interest did
 S(t_k)=\prod_{l=1}^k (1-h(t_l))
 \]</span></p>
 <p>where <span class="math inline">\(k\)</span> denotes the disjoint intervals and <span class="math inline">\(l\)</span> the number of time periods in which the event occurred.</p>
-<p><img src="cox_net.png" /></p>
+<figure>
+<center>
+<img src="cox_net.png" style="width:100%">
+<figcaption>
+Image Source: Sharaf et al. 2020
+</figcaption>
+</center>
+</figure>
 </div>
 <div id="bayesian-approach-to-inference-using-ann" class="section level1" number="4">
 <h1><span class="header-section-number">4</span> Bayesian approach to inference using ANN</h1>
@@ -315,11 +392,13 @@ P(w, p) = (\frac{1}{z} exp^{-U(w)/z})(\frac{1}{T}exp^{-K(p)/T})
 where:
 <span class="math inline">\(U(w) =\)</span> the negative log-likelihood of the posterior distribution defined as <span class="math inline">\(U(w)=-log[p(w)L(w|D)]\)</span>
 <span class="math inline">\(L(w|D) =\)</span> the likelihood function given the data <br>
-$K(p) = _{i=1}<sup>{d}(P_i</sup>2)/(2m_i) $ is the kinetic energy corresponding to the negative log-likelihood of the normal distribution with mean, <span class="math inline">\(\mu\)</span> and variance-covariance matrix with diagonal elements, <span class="math inline">\(M=(m_1, \cdots, m_d)\)</span><br>
+<span class="math inline">\(K(p)=\sum_{i=1}^{d}(P_i^2)/(2m_i)\)</span> is the kinetic energy corresponding to the negative log-likelihood of the normal distribution with mean, <span class="math inline">\(\mu\)</span> and variance-covariance matrix with diagonal elements, <span class="math inline">\(M=(m_1, \cdots, m_d)\)</span> <br>
 <span class="math inline">\(Z\)</span> and <span class="math inline">\(T\)</span> are the normalizing constants.</p>
 <p>The algorithm is summarized as below:</p>
-<p><img src="blnn_algorithm.jpg" />
-Source: Sharaf et. al (2020)</p>
+<div class="figure">
+<img src="blnn_algorithm.jpg" alt="" />
+<p class="caption">Image Source: Sharaf et al. 2020</p>
+</div>
 <p>Details about the implementation of this method can be found <a href="https://rdrr.io/github/BLNNdevs/BLNN/#vignettes">here</a>.</p>
 <p><span class="citation"><a href="#ref-sharaf2020blnn" role="doc-biblioref">Sharaf et al.</a> (<a href="#ref-sharaf2020blnn" role="doc-biblioref">2020</a>)</span> utilize a no-U-turn sampler (NUTS), an extension of Hamiltonian Monte-Carlo (HMC) that seeks to reduce the dependence on the number of step parameters used in HMC while retaining the efficiency in generating independent samples. The ANN is trained using both HMC and NUTS with dual averaging. The negative log-likelihood is replaced by network errors, and backpropagation is used to compute the gradients. Network errors and weights are assumed to be normally distributed with mean, <span class="math inline">\(\mu\)</span> but with a non-constant variance, <span class="math inline">\(\sigma^2\)</span>. The variance of the prior is known by the precision parameter, <span class="math inline">\(\tau = \frac{1}{\sigma^2}\)</span> aka the hyperparameters which are either assigned to fixed, fine-tuned values or re-estimated based on historical data. The list of hyperparameters allowed in the BLNN implementation is discussed elsewhere <span class="citation">(<a href="#ref-sharaf2020blnn" role="doc-biblioref">Sharaf et al. 2020</a>)</span>. The following section provides a sample application of BLNNs applied to real-world data.</p>
 </div>
@@ -327,65 +406,65 @@ Source: Sharaf et. al (2020)</p>
 <h1><span class="header-section-number">5</span> Bayesian-based neural networks for modeling survival using micro-array data</h1>
 <div id="introduction-and-data-description" class="section level2" number="5.1">
 <h2><span class="header-section-number">5.1</span> Introduction and data description</h2>
-<p>In our analyses in this section, we employ data consisting of 256 samples prepared using the Illumina Human-6 expression BeadChip Version 2.0 to identify DEGs and use bayesian neural networks to identify how these genes impact survival in patients with primary bladder cancer. The data relates to 165 primary bladder cancer samples and nine normal cells downloaded from the Gene Expression Omnibus (GEO) <span class="citation">(<a href="#ref-kim2010predictive" role="doc-biblioref">Kim et al. 2010</a>; <a href="#ref-okutse2021differential" role="doc-biblioref">Okutse and Nyongesa 2021</a>)</span>.</p>
-<pre class="r"><code>#load the data from the GEO
-gset &lt;- getGEO(&quot;GSE13507&quot;, GSEMatrix =TRUE, AnnotGPL=TRUE)
-if (length(gset) &gt; 1) idx &lt;- grep(&quot;GPL6102&quot;, attr(gset, &quot;names&quot;)) else idx &lt;- 1
-gset &lt;- gset[[idx]]
-
-# make proper column names to match toptable 
-fvarLabels(gset) &lt;- make.names(fvarLabels(gset))
-
-# group names for all samples
-gsms &lt;- paste0(&quot;0000000000XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX&quot;,
-               &quot;XXXXXXXXXXXXXXXXXX22222222222222222222222222222222&quot;,
-               &quot;22222222222222222222222222222222222222222222222222&quot;,
-               &quot;22222222222222222222222222222222222222222222222222&quot;,
-               &quot;222222222222222222222222222222222XXXXXXXXXXXXXXXXX&quot;,
-               &quot;XXXXXX&quot;)
-sml &lt;- c()
-for (i in 1:nchar(gsms)) { sml[i] &lt;- substr(gsms,i,i) }
-
-# eliminate samples marked as &quot;X&quot;
-sel &lt;- which(sml != &quot;X&quot;)
-sml &lt;- sml[sel]
-gset &lt;- gset[ ,sel]
-
-# log2 transform
-exprs(gset) &lt;- log2(exprs(gset))
-
-# set up the data and proceed with analysis
-sml &lt;- paste(&quot;G&quot;, sml, sep=&quot;&quot;)    # set group names
-fl &lt;- as.factor(sml)
-gset$description &lt;- fl
-design &lt;- model.matrix(~ description + 0, gset)
-colnames(design) &lt;- levels(fl)
-fit &lt;- lmFit(gset, design)
-cont.matrix &lt;- makeContrasts(G2-G0, levels=design)
-fit2 &lt;- contrasts.fit(fit, cont.matrix)
-fit2 &lt;- eBayes(fit2, 0.01)
-
-tT &lt;- topTable(fit2, adjust=&quot;fdr&quot;, sort.by=&quot;B&quot;, number=Inf) 
-#tt&lt;-subset(tT, select=c(&quot;Gene.symbol&quot;,&quot;logFC&quot;,&quot;AveExpr&quot;,&quot;t&quot;,&quot;P.Value&quot;,&quot;adj.P.Val&quot;,&quot;B&quot;))
-#dat&lt;-subset(tT, select=c(&quot;Gene.symbol&quot;,&quot;logFC&quot;,&quot;adj.P.Val&quot;))</code></pre>
+<p>In our analyses in this section, we employ data consisting of 256 samples prepared using the Illumina Human-6 expression BeadChip Version 2.0 to identify DEGs and use bayesian neural networks to identify how these genes impact survival in patients with primary bladder cancer. The data relates to 165 primary bladder cancer samples and nine normal cells downloaded from the Gene Expression Omnibus (GEO) <span class="citation">(<a href="#ref-kim2010predictive" role="doc-biblioref">Kim et al. 2010</a>; <a href="#ref-okutse2021differential" role="doc-biblioref">Okutse and Nyongesa 2021</a>)</span>. Before we begin this demonstration, we first load the Bioconductor packages to be used in the anallysis. Details on the installation of this packages can be found elsewhere.<a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a></p>
+<p>After loading the required packages, we then download the data directly into our working environment and prepare it for analysis by performing a log transformation, creating a design matrix, and then fitting linear models for the identification of differentially expressed genes using empirical Bayes statistics for differential expression (eBayes) using the <code>limma</code> package <span class="citation">(<a href="#ref-ritchie2015limma" role="doc-biblioref">Ritchie et al. 2015</a>)</span>.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#load the data from the GEO</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>gset <span class="ot">&lt;-</span> <span class="fu">getGEO</span>(<span class="st">&quot;GSE13507&quot;</span>, <span class="at">GSEMatrix =</span><span class="cn">TRUE</span>, <span class="at">AnnotGPL=</span><span class="cn">TRUE</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">length</span>(gset) <span class="sc">&gt;</span> <span class="dv">1</span>) idx <span class="ot">&lt;-</span> <span class="fu">grep</span>(<span class="st">&quot;GPL6102&quot;</span>, <span class="fu">attr</span>(gset, <span class="st">&quot;names&quot;</span>)) <span class="cf">else</span> idx <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>gset <span class="ot">&lt;-</span> gset[[idx]]</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># make proper column names to match toptable </span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">fvarLabels</span>(gset) <span class="ot">&lt;-</span> <span class="fu">make.names</span>(<span class="fu">fvarLabels</span>(gset))</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># group names for all samples</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>gsms <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;0000000000XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX&quot;</span>,</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>               <span class="st">&quot;XXXXXXXXXXXXXXXXXX22222222222222222222222222222222&quot;</span>,</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>               <span class="st">&quot;22222222222222222222222222222222222222222222222222&quot;</span>,</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>               <span class="st">&quot;22222222222222222222222222222222222222222222222222&quot;</span>,</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>               <span class="st">&quot;222222222222222222222222222222222XXXXXXXXXXXXXXXXX&quot;</span>,</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>               <span class="st">&quot;XXXXXX&quot;</span>)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>sml <span class="ot">&lt;-</span> <span class="fu">c</span>()</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nchar</span>(gsms)) { sml[i] <span class="ot">&lt;-</span> <span class="fu">substr</span>(gsms,i,i) }</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co"># eliminate samples marked as &quot;X&quot;</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>sel <span class="ot">&lt;-</span> <span class="fu">which</span>(sml <span class="sc">!=</span> <span class="st">&quot;X&quot;</span>)</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>sml <span class="ot">&lt;-</span> sml[sel]</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>gset <span class="ot">&lt;-</span> gset[ ,sel]</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="co"># log2 transform</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="fu">exprs</span>(gset) <span class="ot">&lt;-</span> <span class="fu">log2</span>(<span class="fu">exprs</span>(gset))</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="co"># set up the data and proceed with analysis</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>sml <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="st">&quot;G&quot;</span>, sml, <span class="at">sep=</span><span class="st">&quot;&quot;</span>)    <span class="co"># set group names</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>fl <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(sml)</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>gset<span class="sc">$</span>description <span class="ot">&lt;-</span> fl</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>design <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span> description <span class="sc">+</span> <span class="dv">0</span>, gset)</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(design) <span class="ot">&lt;-</span> <span class="fu">levels</span>(fl)</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lmFit</span>(gset, design)</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>cont.matrix <span class="ot">&lt;-</span> <span class="fu">makeContrasts</span>(G2<span class="sc">-</span>G0, <span class="at">levels=</span>design)</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>fit2 <span class="ot">&lt;-</span> <span class="fu">contrasts.fit</span>(fit, cont.matrix)</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>fit2 <span class="ot">&lt;-</span> <span class="fu">eBayes</span>(fit2, <span class="fl">0.01</span>)</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>tT <span class="ot">&lt;-</span> <span class="fu">topTable</span>(fit2, <span class="at">adjust=</span><span class="st">&quot;fdr&quot;</span>, <span class="at">sort.by=</span><span class="st">&quot;B&quot;</span>, <span class="at">number=</span><span class="cn">Inf</span>) </span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="co">#we can then save the list of 1000 DEGs</span></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(tT[<span class="dv">1</span><span class="sc">:</span><span class="dv">1000</span>,], <span class="st">&quot;deg.RDS&quot;</span>)</span></code></pre></div>
 </div>
 <div id="exploratory-data-analysis-and-deg-identification" class="section level2" number="5.2">
 <h2><span class="header-section-number">5.2</span> Exploratory data analysis and DEG identification</h2>
-<p>First, we perform some exploratory data analysis on these data. We perform data transformation including sample normalization and log2 transformation then use eBayes<a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a> to fit a model for differential expression analysis. We then present a sample of 10 up and down regulated genes in Table <a href="#tab:table1">5.1</a>. In Figure <a href="#fig:mean-difference">5.1</a> we visualize the differentially expressed genes in this sample using a mean-difference plot.</p>
-<pre class="r"><code>#top regulated genes
-upregulated&lt;-tT[which(tT$logFC&gt;0),][1:10,]
-#upregulated
-upregulated&lt;-subset(upregulated, select=c(&quot;Gene.ID&quot;, &quot;Gene.symbol&quot;,&quot;logFC&quot;,&quot;AveExpr&quot;,&quot;adj.P.Val&quot;,&quot;B&quot;))
-##getting top 10 downregulated genes
-downreg&lt;-tT[which(tT$logFC&lt;0),][1:10,]
-downreg&lt;-subset(downreg, select=c(&quot;Gene.ID&quot;,&quot;Gene.symbol&quot;,&quot;logFC&quot;,&quot;AveExpr&quot;,&quot;adj.P.Val&quot;,&quot;B&quot;))
-
-deg&lt;-rbind(upregulated, downreg) 
-rownames(deg)&lt;-NULL
-deg%&gt;% kable(format = &quot;html&quot;, 
-             caption = &quot;Top 10 up and down regulated genes in primary bladder cancer. The first 10 rows represent upregulated genes&quot;,
-             col.names = c(&quot;Gene ID&quot;, &quot;Gene Symbol&quot;, &quot;logFC&quot;, &quot;Average Expression&quot;, &quot;Adjusted P-value&quot;, &quot;B&quot;)) %&gt;%
-  kable_styling(full_width = FALSE, latex_options = c(&quot;HOLD_position&quot;, &quot;stripped&quot;, &quot;scale_down&quot;), position = &quot;left&quot;)</code></pre>
+<p>For our exploratory data analysis, we start by presenting a small sample of 10 up-and-down regulated genes in Table <a href="#tab:table1">5.1</a>. Here we notice that <em>CDC20</em> is one of the most significantly up-regulated genes between normal and primary bladder cancer samples (log-Fold Change = 0.472, Average Expression = 3.44, p&lt;0.001).</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#top regulated genes</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>upregulated<span class="ot">&lt;-</span>tT[<span class="fu">which</span>(tT<span class="sc">$</span>logFC<span class="sc">&gt;</span><span class="dv">0</span>),][<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>,]</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">#upregulated</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>upregulated<span class="ot">&lt;-</span><span class="fu">subset</span>(upregulated, <span class="at">select=</span><span class="fu">c</span>(<span class="st">&quot;Gene.ID&quot;</span>, <span class="st">&quot;Gene.symbol&quot;</span>,<span class="st">&quot;logFC&quot;</span>,<span class="st">&quot;AveExpr&quot;</span>,<span class="st">&quot;adj.P.Val&quot;</span>,<span class="st">&quot;B&quot;</span>))</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="do">##getting top 10 downregulated genes</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>downreg<span class="ot">&lt;-</span>tT[<span class="fu">which</span>(tT<span class="sc">$</span>logFC<span class="sc">&lt;</span><span class="dv">0</span>),][<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>,]</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>downreg<span class="ot">&lt;-</span><span class="fu">subset</span>(downreg, <span class="at">select=</span><span class="fu">c</span>(<span class="st">&quot;Gene.ID&quot;</span>,<span class="st">&quot;Gene.symbol&quot;</span>,<span class="st">&quot;logFC&quot;</span>,<span class="st">&quot;AveExpr&quot;</span>,<span class="st">&quot;adj.P.Val&quot;</span>,<span class="st">&quot;B&quot;</span>))</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>deg<span class="ot">&lt;-</span><span class="fu">rbind</span>(upregulated, downreg) </span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(deg)<span class="ot">&lt;-</span><span class="cn">NULL</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>deg<span class="sc">%&gt;%</span> <span class="fu">kable</span>(<span class="at">format =</span> <span class="st">&quot;html&quot;</span>, </span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>             <span class="at">caption =</span> <span class="st">&quot;Top 10 up and down regulated genes in primary bladder cancer. The first 10 rows represent upregulated genes&quot;</span>,</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>             <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">&quot;Gene ID&quot;</span>, <span class="st">&quot;Gene Symbol&quot;</span>, <span class="st">&quot;logFC&quot;</span>, <span class="st">&quot;Average Expression&quot;</span>, <span class="st">&quot;Adjusted P-value&quot;</span>, <span class="st">&quot;B&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>, <span class="at">latex_options =</span> <span class="fu">c</span>(<span class="st">&quot;HOLD_position&quot;</span>, <span class="st">&quot;stripped&quot;</span>, <span class="st">&quot;scale_down&quot;</span>), <span class="at">position =</span> <span class="st">&quot;left&quot;</span>)</span></code></pre></div>
 <table class="table" style="width: auto !important; ">
 <caption>
 <span id="tab:table1">Table 5.1: </span>Top 10 up and down regulated genes in primary bladder cancer. The first 10 rows represent upregulated genes
@@ -807,17 +886,16 @@ CORIN
 </tr>
 </tbody>
 </table>
+<p>In Figure <a href="#fig:mean-difference">5.1</a> we visualize the differentially expressed genes in this sample using a mean-difference plot highlighting the genes depending on whether they were significantly up or down regulated.</p>
 <div class="figure"><span style="display:block;" id="fig:mean-difference"></span>
 <img src="README_files/figure-html/mean-difference-1.png" alt="A mean-difference plot showing the statistically significantly up and down regulated genes in primary bladder cancer relative to normal bladder cells."  />
 <p class="caption">
 Figure 5.1: A mean-difference plot showing the statistically significantly up and down regulated genes in primary bladder cancer relative to normal bladder cells.
 </p>
 </div>
-<p>Additionally, we perform a basic functional enrichment analysis using Gene Ontology (GO) enrichment analysis and a small fraction of the DEGs (n = 300 genes) to identify the pathways where this statistically significantly differentially expressed genes are enriched. Here, we use a basic barplot to visualize the most common GO terms. We note in Figure <a href="#fig:enrich">5.2</a> that some of these genes are involved in a number of biological functions including synapse organization as well as junction assembly and neural migration.</p>
-<pre class="r"><code>#using clusteRprofiler to get the networks of genes in relation to function
-#cnetplot(edo, foldChange = gene_symbols, circular=TRUE, colorEdge = TRUE, showCategory = 20)
-#barplots of the similar results showing only 20 enrichment categories
-barplot(edo, showCategory=10, cex.names=3)</code></pre>
+<p>Additionally, we perform a basic functional enrichment analysis using Gene Ontology (GO) enrichment analysis and a small fraction of the DEGs (n = 300 genes) to identify the pathways where this statistically significantly differentially expressed genes are enriched. Here, we use a basic barplot to visualize the most common GO terms. We note in Figure <a href="#fig:enrich">5.2</a> that these genes are involved in a number of biological functions including synapse organization as well as junction assembly and neural migration.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#barplots of the similar results showing only 20 enrichment categories</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">barplot</span>(edo, <span class="at">showCategory=</span><span class="dv">10</span>, <span class="at">cex.names=</span><span class="dv">3</span>)</span></code></pre></div>
 <div class="figure"><span style="display:block;" id="fig:enrich"></span>
 <img src="README_files/figure-html/enrich-1.png" alt="Sample Enrichment analysis results using the Gene Ontology (GO) enrichment analysis."  />
 <p class="caption">
@@ -826,68 +904,123 @@ Figure 5.2: Sample Enrichment analysis results using the Gene Ontology (GO) enri
 </div>
 </div>
 </div>
-<div id="neural-networks-with-bayesian-learning" class="section level1" number="6">
-<h1><span class="header-section-number">6</span> Neural Networks with Bayesian Learning</h1>
-<p>The data used in this analysis consists of 43148 observations on 256 variables. First, we begin by cleaning up the data in preparation for downstream analysis and then select a sample of genes for our analysis here. For brevity we perform analyses on a sample of n=2000 genes.</p>
-<p>Here, we install package <code>remotes</code> and then use it to install the development version of the BLNN package which allows us to use Bayesian learning neural networks and apply these to our dataset. We install this package using the command <code>remotes::install_github("BLNNdevs/BLNN")</code> and then select a sample of about 1375 gene probes to use in downstream analysis.</p>
-<pre class="r"><code>#install the package BLNN
-#install.packages(&quot;remotes&quot;)
-#remotes::install_github(&quot;BLNNdevs/BLNN&quot;)
-library(BLNN)
-#load the probes to be used in analysis
-probes&lt;-read.csv(&quot;probs.csv&quot;)
-coxdata&lt;-coxdata[, 8:ncol(coxdata)]
-#filter the data to only selected probes from the probes data file
-names&lt;-names(coxdata) %in% probes$x
-coxdata&lt;-coxdata[, names]
-#add the survival data column to this subset data
-coxdata$overall_survival&lt;-overall_survival
-#coxdata&lt;-data.frame(overall_survival, coxdata)
-#str(coxdata)
-
-#create a matrix from the data
-mod&lt;-model.matrix(overall_survival~.,
-                  data = coxdata)
-#create the training matrix of covariates and the response vector, y
-trainx&lt;-mod[, 2:ncol(mod)]
-trainy&lt;-coxdata$overall_survival</code></pre>
-<pre class="r"><code>#build the BLNN object
-survObj&lt;-BLNN_Build(ncov = 1375, nout = 1, hlayer_size = 10,
-                    actF = &quot;tanh&quot;, outF = &quot;sigmoid&quot;, cost = &quot;crossEntropy&quot;,
-                    hp.Err = 20, hp.W1 = rep(1, ncol(trainx)), hp.W2 = 1,
-                    hp.B1 = 1, hp.B2 = 1)
-#print(survObj)</code></pre>
-<pre class="r"><code>trainxx&lt;-coxdata[,1:1375]
-#network weights
-n.par&lt;-length(BLNN_GetWts(survObj))
-#number of desired chains
-chains&lt;-2
-#initials weight values
-initials&lt;-lapply(1:chains, function(i) rnorm(length(BLNN_GetWts(survObj)), 0, 1/sqrt(n.par)))
-
-#variance for the moments
-m1&lt;-rep(1/2, n.par)
-#trainx&lt;-as.array(trainx)
-#start the training
-#trainxx&lt;-array(trainx, dim = c(165, 1375, 0))
-
-survNUTS&lt;-BLNN_Train(survObj, x=trainxx, y=trainy,
-                     iter = 5000, thin = 10, warmup = 400,
-                     init = initials, chains = chains,
-                     algorithm = &quot;HMC&quot;, evidence = FALSE,
-                     control = list(adapt_delta=0.99, momentum_mass=m1, 
-                                    stepsize=1, gamma=15, to=10, useDA=TRUE,
-                                    max_treedepth=20))</code></pre>
-<pre class="r"><code>#model predictions without evidence
-predicted1&lt;-BLNN_Predict(survObj, trainx, fit = survNUTS)
-#predict using the neural network with evidence
-#predicted2&lt;-BLNN_Predict(survObj, trainx, fit = survNUTS.ev)</code></pre>
+<div id="artificial-neural-networks-ann-with-bayesian-learning" class="section level1" number="6">
+<h1><span class="header-section-number">6</span> Artificial Neural Networks (ANN) with Bayesian Learning</h1>
+<p>In this analysis, because of the computationally intensive nature of training neural network models using Bayesian learning and simulation methodology such as the NUTS algorithm, we restrict analyses to only a small sample of the genetic information available in the dataset. We load a sample of n= 150 genetic information for analysis using BLNN.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#load the bayesian learning package</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(BLNN)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">#load the saved train and test data files</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>trainy<span class="ot">&lt;-</span><span class="fu">readRDS</span>(<span class="st">&quot;trainy.RDS&quot;</span>)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>trainx<span class="ot">&lt;-</span><span class="fu">readRDS</span>(<span class="st">&quot;trainxx.RDS&quot;</span>)</span></code></pre></div>
+<p>First, we build up an object of class <code>BLNN</code> using the <code>BLNN_Build()</code> declaring the number of input features in the input layer (<code>ncol(trainx)</code>), the number of nodes in the output layer <code>nout</code>, the number of nodes in the hidden layer, the activation function, the cost function, the output function, and the weights for the input features, bias terms, as well as hidden nodes. Details on all parameters accepted as inputs by the function can be found <a href="https://rdrr.io/github/BLNNdevs/BLNN/man/BLNN_Build.html">here</a>. The hyper-parameters used here are arbitrarily selected and are re-estimated through an evidence procedure during the model training process.</p>
+<p>The created <code>BLNN</code> object is then trained either using evidence or not. Here, we first use the <code>nnet</code> package as a baseline and compare this neural network model performance to the BLNN model with evidence and another neural network fitted to the data using the same architecture described, but without evidence. We use two chains in our learning process in order to develop an understanding of the parameter space while varying the starting values. The training function <code>BLNN_Train()</code> function is supplied with random normal weights from the standard normal distribution. For each chain, however, we use a predefined method of generating weights.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#set the hyperparameters;  change this to evaluate</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co">#network weights</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>n.par<span class="ot">&lt;-</span><span class="fu">length</span>(<span class="fu">BLNN_GetWts</span>(survObj))</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">#number of desired chains</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>chains<span class="ot">&lt;-</span><span class="dv">2</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">#initials weight values</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>initials<span class="ot">&lt;-</span><span class="fu">lapply</span>(<span class="dv">1</span><span class="sc">:</span>chains, <span class="cf">function</span>(i) <span class="fu">rnorm</span>(n.par, <span class="dv">0</span>, <span class="dv">1</span><span class="sc">/</span><span class="fu">sqrt</span>(n.par)))</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co">#using nnet as baseline</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(nnet)</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>nnetBasesline<span class="ot">&lt;-</span><span class="fu">nnet</span>(trainx, trainy, <span class="at">size=</span> <span class="dv">75</span>, <span class="at">maxit =</span> <span class="dv">1000</span>, <span class="at">MaxNWts =</span> <span class="dv">15000</span>)</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>nnetPredictions<span class="ot">&lt;-</span><span class="fu">predict</span>(nnetBasesline)</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>NET.abserror<span class="ot">&lt;-</span><span class="fu">sum</span>(<span class="fu">abs</span>(trainy<span class="sc">-</span>nnetPredictions)) <span class="co">#0.0736</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>NET.error<span class="ot">&lt;-</span>nnetBasesline<span class="sc">$</span>value <span class="co">#7.97425e-05</span></span></code></pre></div>
+<p>First, we train our feed-forward neural network model without using evidence by passing the function the <code>BLNN</code> object, the dataframe with covariates, the response vector, <span class="math inline">\(y\)</span>, the number of iterations and use parallelization to leverage the power of multi-core computing. Additional arguments to this function can be found elsewhere.<a href="#fn5" class="footnote-ref" id="fnref5"><sup>5</sup></a></p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#variance for the moments</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>m1<span class="ot">&lt;-</span><span class="fu">rep</span>(<span class="dv">1</span><span class="sc">/</span><span class="dv">2</span>, n.par)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">#training the model</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>trainx<span class="ot">&lt;-</span><span class="fu">scale</span>(trainx)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>survNUTS<span class="ot">&lt;-</span><span class="fu">BLNN_Train</span>(survObj, <span class="at">x=</span>trainx, <span class="at">y=</span>trainy,</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>                     <span class="at">iter =</span> <span class="dv">2000</span>, <span class="at">thin =</span> <span class="dv">10</span>, <span class="at">warmup =</span> <span class="dv">400</span>,</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>                     <span class="at">init =</span> initials, <span class="at">chains =</span> chains,</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>                     <span class="at">parallel =</span> <span class="cn">TRUE</span>, <span class="at">cores =</span> <span class="dv">2</span>,</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>                     <span class="at">algorithm =</span> <span class="st">&quot;NUTS&quot;</span>, <span class="at">evidence =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>                     <span class="at">control =</span> <span class="fu">list</span>(<span class="at">adapt_delta=</span><span class="fl">0.99</span>, <span class="at">momentum_mass=</span>m1, </span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">stepsize=</span> <span class="dv">1</span>, <span class="at">gamma=</span><span class="fl">0.05</span>, <span class="at">to=</span><span class="dv">100</span>, <span class="at">useDA=</span><span class="cn">TRUE</span>,</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">max_treedepth=</span><span class="dv">20</span>))</span></code></pre></div>
+<p>We check our values of Rhat to ensure that they are below one, and that we have larger values for effective sample size (minimum 50 each) before we can update each of our networks with the newly sampled parameters.</p>
+<p>The next neural network model is built on this data but with the evidence option allowed to enable re-estimation of the model hyper-parameters using historical data or the matrix of covariates, <span class="math inline">\(x\)</span> if the historical data is not available.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#bayesian learning with evidence used in re-estimating hyper-parameters</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>survNUTS.ev<span class="ot">&lt;-</span><span class="fu">BLNN_Train</span>(survObj, <span class="at">x=</span>trainx, <span class="at">y=</span>trainy,</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>                     <span class="at">iter =</span> <span class="dv">5000</span>, <span class="at">thin =</span> <span class="dv">10</span>, <span class="at">warmup =</span> <span class="dv">400</span>,</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>                     <span class="at">init =</span> initials, <span class="at">chains =</span> chains,</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>                     <span class="at">parallel =</span> <span class="cn">TRUE</span>, <span class="at">cores =</span> <span class="dv">2</span>,</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>                     <span class="at">algorithm =</span> <span class="st">&quot;NUTS&quot;</span>, <span class="at">evidence =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>                     <span class="at">control =</span> <span class="fu">list</span>(<span class="at">adapt_delta=</span><span class="fl">0.99</span>, <span class="at">momentum_mass=</span>m1, </span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">stepsize =</span> <span class="dv">5</span>, <span class="at">gamma =</span> <span class="fl">0.05</span>, <span class="at">to=</span><span class="dv">100</span>, <span class="at">useDA=</span><span class="cn">TRUE</span>,</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">max_treedepth=</span><span class="dv">20</span>))</span></code></pre></div>
+<p>After training, we can then update the trained neural network models with the values sampled from the learning process using the <code>BLNN_Update()</code> function. If evidence was used in training the hyper-parameters will be updated as well.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">#updating the parameters after the learning process</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="do">##update the no evidence neural network</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>survNUTS<span class="ot">&lt;-</span><span class="fu">BLNN_Update</span>(survObj, survNUTS)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="do">##update the evidence neural network</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>survNUTS.ev<span class="ot">&lt;-</span><span class="fu">BLNN_Update</span>(survObj, survNUTS.ev)</span></code></pre></div>
+<p>After training the models, we can then update the trained neural network models with the values sampled from the learning process using the <code>BLNN_Update()</code> function. If evidence was used in training the hyper-parameters will be updated as well.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">#making predictions using these models</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="do">##predictions using no evidence</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>survpred<span class="ot">&lt;-</span><span class="fu">BLNN_Predict</span>(survNUTS, trainx, trainy)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="do">##predictions using bayesian learning</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>survpred.ev<span class="ot">&lt;-</span><span class="fu">BLNN_Predict</span>(survNUTS.ev, trainx, trainy)</span></code></pre></div>
+<p>To evaluate our models, we create a tables of all evaluation metrics including all the models trained in this post, for illustrative purposes. Here we report the errors associated with the use of these models in survival modeling in Table <a href="#tab:bb">6.1</a>.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Model evaluations</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="do">##extract the errors in the classification</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>errors<span class="ot">&lt;-</span><span class="fu">c</span>(survpred<span class="sc">$</span>Errors<span class="sc">$</span>Total, survpred.ev<span class="sc">$</span>Errors<span class="sc">$</span>Total, nnetBasesline<span class="sc">$</span>value)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co">#print out the model evaluations</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>OutTab<span class="ot">&lt;-</span><span class="fu">data.frame</span>(errors)</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(OutTab)<span class="ot">&lt;-</span><span class="fu">c</span>(<span class="st">&quot;NUTS (no evidence)&quot;</span>, <span class="st">&quot;NUTS (with evidence)&quot;</span>, <span class="st">&quot;NNET&quot;</span>)</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(OutTab, <span class="st">&quot;outTab.RDS&quot;</span>)</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(OutTab, <span class="st">&quot;OutTab.csv&quot;</span>)</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>OutTab <span class="sc">%&gt;%</span> <span class="fu">kable</span>(<span class="at">format =</span> <span class="st">&quot;html&quot;</span>, <span class="at">caption =</span> <span class="st">&quot;Artificial Neural Network Model Comparisons&quot;</span>) <span class="sc">%&gt;%</span> <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>, <span class="at">latex_options =</span> <span class="fu">c</span>(<span class="st">&quot;HOLD_position&quot;</span>, <span class="st">&quot;stripped&quot;</span>, <span class="st">&quot;scale_down&quot;</span>), <span class="at">position =</span> <span class="st">&quot;left&quot;</span>)</span></code></pre></div>
+<table class="table" style="width: auto !important; ">
+<caption>
+<span id="tab:bb">Table 6.1: </span>Artificial Neural Network Model Comparisons
+</caption>
+<tbody>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Error
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+NUTS (no evidence)
+</td>
+<td style="text-align:left;">
+1.00E-04
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+NUTS (with evidence)
+</td>
+<td style="text-align:left;">
+7.97E-07
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+NNET
+</td>
+<td style="text-align:left;">
+7.97E-05
+</td>
+</tr>
+</tbody>
+</table>
 </div>
-<div id="discussion" class="section level1" number="7">
-<h1><span class="header-section-number">7</span> Discussion</h1>
+<div id="discussion-and-conclusion" class="section level1" number="7">
+<h1><span class="header-section-number">7</span> Discussion and Conclusion</h1>
+<p>In this extension post, we have explored Bayesian learning in the context of artificial neural networks for modeling survival data, using micro array gene expression data for our case. In particular, we have presented the main ideas behind why artificial neural networks using Bayesian learning present an alternative to modeling survival outcomes given the complexity presented by censored data in survival modeling. The post has presented a simplistic introduction to neural networks, focusing predominantly on the feed-forward neural network which is later implemented on the application problem. We later shift to the neural network approach to modeling survival data where we discuss the Cox PH-based ANNs and how this model has been improved to learn hyper-parameters from a posterior distribution derived from prior information (evidence) and the data.</p>
+<p>For brevity, and purposes of demonstration, we present the errors associated with each models trained in this post and show that using evidence results in a reduction in the total error. However, a major issue that we encountered during the course of training these models was the high computational time it took to run the models, even with parallel processing. While the NUTs algorithm and the HMC algorithm employed by the BLNN package are promising, the sampling methods take an exorbitant amount of time to run, especially when the idea is to sample the values of the hyperparameters using historical data (or evidence). <span class="citation"><a href="#ref-sharaf2020blnn" role="doc-biblioref">Sharaf et al.</a> (<a href="#ref-sharaf2020blnn" role="doc-biblioref">2020</a>)</span> note that “Bayesian learning for ANN requires longer learning time when compared with conventional algorithms such as BFGS or gradient descent” something that holds true based on our implementation in this post.</p>
 </div>
 <div id="python-extension" class="section level1" number="8">
 <h1><span class="header-section-number">8</span> Python extension</h1>
+<p>In an extension to this post, we show an implementation of Bayesian learning for neural networks using a simulated dataset in Python is available. The method includes the estimation of the uncertatinty associated with survival estimates which is of great value in the context of predictive modeling. The post can be found <a href="https://okutse.github.io">here</a>. After modeling and identifying the genes that impact survival in primary bladder cancer patients, the genes can then be annotated and encoded based on their enrichment level as either high, medium, or low and survival curves plotted to understand the effect these varied expression profiles have on survival.</p>
 </div>
 <div id="references" class="section level1" number="9">
 <h1><span class="header-section-number">9</span> References</h1>
@@ -910,6 +1043,9 @@ Lawrence, Steve, C Lee Giles, and Ah Chung Tsoi. 1997. <span>“Lessons in Neura
 <div id="ref-okutse2021differential" class="csl-entry">
 Okutse, Amos, and Kelvin Nyongesa. 2021. <span>“Differential Expression Analysis for the Identification of Survival Associated Genes in Primary Bladder Cancer Using Microarray Data.”</span> <em>International Journal of Undergraduate Research and Creative Activities</em> 13 (1).
 </div>
+<div id="ref-ritchie2015limma" class="csl-entry">
+Ritchie, Matthew E, Belinda Phipson, DI Wu, Yifang Hu, Charity W Law, Wei Shi, and Gordon K Smyth. 2015. <span>“Limma Powers Differential Expression Analyses for RNA-Sequencing and Microarray Studies.”</span> <em>Nucleic Acids Research</em> 43 (7): e47–47.
+</div>
 <div id="ref-sharaf2015two" class="csl-entry">
 Sharaf, Taysseer, and Chris P Tsokos. 2015. <span>“Two Artificial Neural Networks for Modeling Discrete Survival Time of Censored Data.”</span> <em>Advances in Artificial Intelligence</em> 2015.
 </div>
@@ -922,9 +1058,10 @@ Sharaf, Taysseer, Theren Williams, Abdallah Chehade, and Keshav Pokhrel. 2020. <
 <hr />
 <ol>
 <li id="fn1"><p>Censoring refers to a concept in survival analysis where the actual time to event is unknown due to such reasons as the loss to follow up, withdrawals, or an exact unknown time of event. In right censoring, the event of interest occurs after the end of the experiment or study, whereas in left censoring, the event occurs before the onset of the study. Interval censoring is when the actual survival time is bounded between some interval<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
-<li id="fn2"><p>Common activation functions include the sigmoid activation function favoured in classification problems, the rectified linear unit (ReLU) favoured in linear regression problems, tanh, and leaky ReLU.<a href="#fnref2" class="footnote-back">↩︎</a></p></li>
+<li id="fn2"><p>Common activation functions include the sigmoid activation function favored in classification problems, the rectified linear unit (ReLU) favored in linear regression problems, tanh, and leaky ReLU.<a href="#fnref2" class="footnote-back">↩︎</a></p></li>
 <li id="fn3"><p> formula defined here<a href="#fnref3" class="footnote-back">↩︎</a></p></li>
-<li id="fn4"><p>link here<a href="#fnref4" class="footnote-back">↩︎</a></p></li>
+<li id="fn4"><p><a href="https://www.bioconductor.org/install/" class="uri">https://www.bioconductor.org/install/</a><a href="#fnref4" class="footnote-back">↩︎</a></p></li>
+<li id="fn5"><p><a href="https://rdrr.io/github/BLNNdevs/BLNN/man/BLNN_Train.html" class="uri">https://rdrr.io/github/BLNNdevs/BLNN/man/BLNN_Train.html</a><a href="#fnref5" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
 
@@ -963,7 +1100,7 @@ $(document).ready(function () {
 <!-- code folding -->
 <script>
 $(document).ready(function () {
-  window.initializeCodeFolding("hide" === "show");
+  window.initializeCodeFolding("show" === "show");
 });
 </script>
 
